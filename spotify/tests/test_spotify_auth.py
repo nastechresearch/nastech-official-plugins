@@ -1,6 +1,6 @@
 """Spotify login state: refresh, quarantine and status, against a real auth.json under a temp home.
 
-Moved from hermes-agent core ``tests/hermes_cli/test_spotify_auth.py``.
+Moved from nastech-agent core ``tests/nastech_cli/test_spotify_auth.py``.
 """
 
 from __future__ import annotations
@@ -9,8 +9,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from hermes_cli import auth as auth_mod
-from hermes_cli.auth_constants import AuthError
+from nastech_cli import auth as auth_mod
+from nastech_cli.auth_constants import AuthError
 from spotify_plugin import spotify_auth, spotify_cli
 
 _STATE = {
@@ -33,7 +33,7 @@ _STATE = {
 def _seed(state: dict) -> None:
     with auth_mod._auth_store_lock():
         store = auth_mod._load_auth_store()
-        store["active_provider"] = "nous"
+        store["active_provider"] = "nastech"
         auth_mod._store_provider_state(store, "spotify", state, set_active=False)
         auth_mod._save_auth_store(store)
 
@@ -47,7 +47,7 @@ def test_refresh_persists_fresh_token_without_changing_active_provider(monkeypat
 
     assert creds["access_token"] == "fresh-token"
     assert auth_mod.get_provider_auth_state("spotify")["access_token"] == "fresh-token"
-    assert auth_mod.get_active_provider() == "nous"
+    assert auth_mod.get_active_provider() == "nastech"
 
 
 def test_terminal_refresh_failure_quarantines_dead_tokens(monkeypatch):
@@ -70,7 +70,7 @@ def test_terminal_refresh_failure_quarantines_dead_tokens(monkeypatch):
     assert persisted["client_id"] == "test-client"
     assert persisted["last_auth_error"]["code"] == "spotify_refresh_failed"
     assert persisted["last_auth_error"]["reason"] == "runtime_refresh_failure"
-    assert auth_mod.get_active_provider() == "nous"
+    assert auth_mod.get_active_provider() == "nastech"
 
 
 def test_status_and_logout_commands_read_and_clear_the_stored_login(capsys):
@@ -83,7 +83,7 @@ def test_status_and_logout_commands_read_and_clear_the_stored_login(capsys):
     spotify_cli.handle_cli(SimpleNamespace(action="logout"))
     assert "Logged out of Spotify." in capsys.readouterr().out
     assert auth_mod.get_provider_auth_state("spotify") is None
-    assert auth_mod.get_active_provider() == "nous"
+    assert auth_mod.get_active_provider() == "nastech"
 
     spotify_cli.handle_cli(SimpleNamespace(action="status"))
     assert "spotify: logged out" in capsys.readouterr().out

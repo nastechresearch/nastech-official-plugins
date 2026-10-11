@@ -13,12 +13,12 @@
  * authored.
  */
 
-import type { HermesPlugin, PaletteContribution } from '@hermes/plugin-sdk'
-import { $accentOverride, PALETTE_AREA, setAccentOverride, STATUSBAR_AREAS } from '@hermes/plugin-sdk'
+import type { NastechPlugin, PaletteContribution } from '@nastech/plugin-sdk'
+import { $accentOverride, PALETTE_AREA, setAccentOverride, STATUSBAR_AREAS } from '@nastech/plugin-sdk'
 
 import { AccentPickerTrigger } from './picker.tsx'
 
-const plugin: HermesPlugin = {
+const plugin: NastechPlugin = {
   id: 'accent',
   name: 'Accent Picker',
   description:

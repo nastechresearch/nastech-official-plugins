@@ -1,21 +1,21 @@
-"""hermes-telegram-business — observe-with-approval Telegram Business Mode.
+"""nastech-telegram-business — observe-with-approval Telegram Business Mode.
 
-Turns a Hermes Telegram bot into a secretary for a Telegram Business
+Turns a Nastech Telegram bot into a secretary for a Telegram Business
 account: customers message the owner, the plugin drafts a reply via the
 host LLM, and the OWNER approves every message before it goes out via
 [✓ Send] [✎ Edit] [✕ Discard] inline buttons. There is no auto-send.
 
-Wiring (all through the public Hermes plugin surface — zero core edits):
+Wiring (all through the public Nastech plugin surface — zero core edits):
 
 * ``ctx.register_telegram_handler`` — PTB handlers for BusinessConnection
   updates, business_message / edited_business_message updates, a
   pattern-scoped ``bd:`` CallbackQueryHandler for the draft buttons, an
   owner-DM text handler for edit-capture, and a ``/biz`` CommandHandler.
 * ``ctx.llm`` — host-owned drafting (user's active model + auth).
-* Plugin-owned SQLite state at ``<HERMES_HOME>/telegram-business/state.db``.
+* Plugin-owned SQLite state at ``<NASTECH_HOME>/telegram-business/state.db``.
 
-Requires Hermes Agent with ``register_telegram_handler`` support
-(hermes-agent PR #59159) and python-telegram-bot >= 21.1 (ships with the
+Requires Nastech Agent with ``register_telegram_handler`` support
+(nastech-agent PR #59159) and python-telegram-bot >= 21.1 (ships with the
 Telegram platform plugin).
 """
 
@@ -27,7 +27,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-try:  # Normal package import (Hermes plugin loader, tests via conftest alias)
+try:  # Normal package import (Nastech plugin loader, tests via conftest alias)
     from .manager import BusinessModeManager, CALLBACK_PREFIX
     from .state import BusinessStateDB
 except ImportError:  # pragma: no cover - loaded as a bare module (no package)
@@ -58,11 +58,11 @@ _DEFAULT_PERSONA = (
 )
 
 
-def _hermes_home() -> Path:
-    home = os.environ.get("HERMES_HOME")
+def _nastech_home() -> Path:
+    home = os.environ.get("NASTECH_HOME")
     if home:
         return Path(home)
-    return Path.home() / ".hermes"
+    return Path.home() / ".nastech"
 
 
 def _plugin_config(ctx: Any) -> dict:
@@ -80,7 +80,7 @@ def _plugin_config(ctx: Any) -> dict:
     """
     try:
         import yaml
-        cfg_path = _hermes_home() / "config.yaml"
+        cfg_path = _nastech_home() / "config.yaml"
         if cfg_path.exists():
             raw = yaml.safe_load(cfg_path.read_text()) or {}
             entries = ((raw.get("plugins") or {}).get("entries") or {})
@@ -106,7 +106,7 @@ def register(ctx: Any) -> None:
         if _state["manager"] is not None:
             return _state["manager"]
 
-        db = BusinessStateDB(_hermes_home() / "telegram-business" / "state.db")
+        db = BusinessStateDB(_nastech_home() / "telegram-business" / "state.db")
         _state["db"] = db
 
         async def _send(**kwargs):

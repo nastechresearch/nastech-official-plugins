@@ -1,9 +1,9 @@
 """Memory Wiki dashboard plugin — backend API routes.
 
-Mounted by the Hermes web server at ``/api/plugins/memory-wiki/`` once the plugin is in
+Mounted by the Nastech web server at ``/api/plugins/memory-wiki/`` once the plugin is in
 ``plugins.enabled``. Every route opens the profile's ``state.db`` READ-ONLY through the public
-``hermes_state.SessionDB`` API, resolves the profile at call time (the host scopes
-``?profile=`` via ``HERMES_HOME``), and never writes memory files.
+``nastech_state.SessionDB`` API, resolves the profile at call time (the host scopes
+``?profile=`` via ``NASTECH_HOME``), and never writes memory files.
 
 Routes:
     GET /overview                 subjects + daily logs + recent sessions + persistent-memory notes
@@ -25,7 +25,7 @@ from fastapi import APIRouter, HTTPException
 _log = logging.getLogger(__name__)
 router = APIRouter()
 
-_CORE_MODULE = "hermes_dashboard_plugin_memory_wiki_core"
+_CORE_MODULE = "nastech_dashboard_plugin_memory_wiki_core"
 
 
 def _core():
@@ -48,10 +48,10 @@ def _core():
 
 def _open_db():
     """Read-only handle on the active profile's ``state.db``; ``None`` when it does not exist yet."""
-    from hermes_constants import get_hermes_home
-    from hermes_state import SessionDB
+    from nastech_constants import get_nastech_home
+    from nastech_state import SessionDB
 
-    db_path = get_hermes_home() / "state.db"
+    db_path = get_nastech_home() / "state.db"
     if not db_path.exists():
         return None
     return SessionDB(db_path=db_path, read_only=True)

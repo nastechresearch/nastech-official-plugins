@@ -147,7 +147,7 @@ def test_unsafe_shared_workspace_falls_back_to_one_private_workspace_per_process
 
 
 def widened_mkdir(monkeypatch):
-    """A default ACL on the tempdir turns every fresh 0700 mkdir into 0770 (seen on a Hermes deployment)."""
+    """A default ACL on the tempdir turns every fresh 0700 mkdir into 0770 (seen on a Nastech deployment)."""
     real = os.mkdir
 
     def mkdir(path, mode=0o777, *args, **kwargs):

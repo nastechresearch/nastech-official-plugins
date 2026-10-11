@@ -19,8 +19,8 @@ from admission import Admission, pin_message_breakpoint
 MARKER = {'type': 'ephemeral'}
 # Native's own system/tools marks: with two message marks the request is at Anthropic's limit of four.
 SYSTEM = [{'type': 'text', 'text': 'x-anthropic-billing-header: cc'},
-          {'type': 'text', 'text': 'You are Claude Code. Hermes system prompt.', 'cache_control': MARKER}]
-TOOLS = [{'name': 'mcp__hermes__terminal', 'description': 'run', 'input_schema': {'type': 'object'},
+          {'type': 'text', 'text': 'You are Claude Code. Nastech system prompt.', 'cache_control': MARKER}]
+TOOLS = [{'name': 'mcp__nastech__terminal', 'description': 'run', 'input_schema': {'type': 'object'},
           'cache_control': MARKER}]
 REMINDER = '\n<system-reminder>userEmail: user@example.com</system-reminder>'
 
@@ -32,12 +32,12 @@ def results(n):
 def assistant(n):
     return {'role': 'assistant', 'content': [
         {'type': 'thinking', 'thinking': f'plan {n}', 'signature': f'sig{n}'},
-        *({'type': 'tool_use', 'id': f'r{n}c{k}', 'name': 'mcp__hermes__terminal', 'input': {'command': f'echo {n}.{k}'}}
+        *({'type': 'tool_use', 'id': f'r{n}c{k}', 'name': 'mcp__nastech__terminal', 'input': {'command': f'echo {n}.{k}'}}
           for k in range(4))]}
 
 
 def native_request(rounds, reminder):
-    """What native sends after ``rounds`` parallel rounds: older rounds replay as Hermes sent them,
+    """What native sends after ``rounds`` parallel rounds: older rounds replay as Nastech sent them,
     the newest carries native's reminder (optionally) and is followed by its per-request context."""
     messages = [{'role': 'user', 'content': [{'type': 'text', 'text': 'run four probes, twice'}]}]
     for n in range(rounds):
@@ -118,7 +118,7 @@ def test_two_native_marks_keep_one_breakpoint_the_next_request_reads(reminder):
     sent_n1 = forward(native_request(2, reminder), results(1))
 
     # Native's mark on the last tool_use recurs and stays; the trailing system message's mark
-    # moves onto the last tool result (which, restored to Hermes' frame, recurs).
+    # moves onto the last tool result (which, restored to Nastech' frame, recurs).
     assert message_marks(native_n) == [(1, 4), (3, 0)]
     assert message_marks(sent_n) == [(1, 4), (2, 3)]
     assert message_marks(sent_n1) == [(3, 4), (4, 3)]

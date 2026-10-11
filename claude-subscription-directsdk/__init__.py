@@ -1,4 +1,4 @@
-"""Claude Subscription DirectSDK (Experimental) — standalone Hermes model-provider registration."""
+"""Claude Subscription DirectSDK (Experimental) — standalone Nastech model-provider registration."""
 from datetime import datetime, timezone
 import logging
 import math
@@ -8,7 +8,7 @@ import shutil
 from providers import register_provider
 from providers.base import ProviderProfile
 
-# Dual import: the Hermes loader imports this directory as a package; the flat test path does not.
+# Dual import: the Nastech loader imports this directory as a package; the flat test path does not.
 try:
     from .model_catalog import ALIASES, MODEL_METADATA, MODEL_CAPABILITIES, native_model
     from .directsdk_setup import INSTALL_HINT, _resolve
@@ -106,8 +106,8 @@ class ClaudeOAuthDirectSDKProfile(ProviderProfile):
         route = native_model(model)
         pinned = self.model_metadata.get(route, {}).get('context_window')
         # Unpinned: behind the relay native Claude Code runs a plain id within its 200K default, and
-        # Hermes' own family guess (claude-opus-5-5 -> 1M before it was pinned) would outgrow that.
-        # A [1m] id stays unreported: no Hermes guess exceeds the 1M native budget, nor is it promised.
+        # Nastech' own family guess (claude-opus-5-5 -> 1M before it was pinned) would outgrow that.
+        # A [1m] id stays unreported: no Nastech guess exceeds the 1M native budget, nor is it promised.
         return pinned or (None if route.endswith('[1m]') else 200_000)
 
     def get_usage_cost(self, model, usage):
@@ -139,7 +139,7 @@ class ClaudeOAuthDirectSDKProfile(ProviderProfile):
 
     def fetch_models(self, **kwargs):
         # No HTTP /models endpoint: the account's own picker (CLI `initialize` handshake) is the
-        # live list for /model, the Desktop picker and `hermes model`; None degrades to the catalog.
+        # live list for /model, the Desktop picker and `nastech model`; None degrades to the catalog.
         rows = self.discover_models(**kwargs)
         return [row["id"] for row in rows] if rows else None
 
@@ -193,9 +193,9 @@ class ClaudeOAuthDirectSDKProfile(ProviderProfile):
 
 
 def classify_api_error(error, **_):
-    # Hermes' stale-call watchdog stops a hung call through Client.cancel(), so its kill comes back as our cancel
-    # error, which Hermes would retry as unknown: classify it as the timeout it is. A user interrupt never arrives
-    # as this error; Hermes marks its request cancelled first, drops ours and raises InterruptedError.
+    # Nastech' stale-call watchdog stops a hung call through Client.cancel(), so its kill comes back as our cancel
+    # error, which Nastech would retry as unknown: classify it as the timeout it is. A user interrupt never arrives
+    # as this error; Nastech marks its request cancelled first, drops ours and raises InterruptedError.
     if isinstance(error, RuntimeError) and str(error) == 'Claude request cancelled':
         return {'reason': 'timeout'}
     return None
@@ -204,7 +204,7 @@ def classify_api_error(error, **_):
 profile = ClaudeOAuthDirectSDKProfile(
     name='claude-subscription-directsdk-experimental',
     display_name='Claude Subscription DirectSDK (Experimental)',
-    description='Claude Subscription DirectSDK (Experimental) (Claude Pro/Max subscription via your Claude Code login; Hermes owns tools)',
+    description='Claude Subscription DirectSDK (Experimental) (Claude Pro/Max subscription via your Claude Code login; Nastech owns tools)',
     api_mode='chat_completions',
     auth_type='external_process',
     supports_health_check=False,
@@ -220,12 +220,12 @@ profile = ClaudeOAuthDirectSDKProfile(
     default_aux_model='claude-sonnet-5[1m]',
     fallback_models=tuple(MODEL_METADATA),
     model_aliases={alias: native_model(alias) for alias in ALIASES},
-    # A dataclass field (Hermes >= 0.21.4), so a method on the subclass would be shadowed by its None default.
+    # A dataclass field (Nastech >= 0.21.4), so a method on the subclass would be shadowed by its None default.
     classify_api_error=classify_api_error,
 )
 register_provider(profile)
 
-# The provider stays registered when Claude Code is missing so `hermes model` can show the
+# The provider stays registered when Claude Code is missing so `nastech model` can show the
 # install hint; the request path (`directsdk.Client`) refuses with the same message.
 if _found is None:
     logger.warning("%s: %s", profile.display_name, INSTALL_HINT)

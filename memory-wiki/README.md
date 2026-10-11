@@ -1,21 +1,21 @@
-<p align="center"><img src="../assets/memory-wiki.jpg" alt="Memory Wiki: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/memory-wiki.jpg" alt="Memory Wiki: official Nastech Agent plugin" width="100%"></p>
 
-# hermes-memory-wiki
+# nastech-memory-wiki
 
-> Part of [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-memory-wiki`](https://github.com/NousResearch/hermes-memory-wiki), which is archived; this directory carries its full history.
+> Part of [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-memory-wiki`](https://github.com/NastechResearch/nastech-memory-wiki), which is archived; this directory carries its full history.
 
-Memory Wiki dashboard plugin for [Hermes Agent](https://github.com/NousResearch/hermes-agent):
+Memory Wiki dashboard plugin for [Nastech Agent](https://github.com/NastechResearch/nastech-agent):
 a browsable **session-history wiki** (subject pages and daily logs derived deterministically from
 your local `state.db`) plus a read-only **Persistent Memory audit panel** showing the `MEMORY.md` /
 `USER.md` entries the agent actually carries into every session.
 
 No LLM calls, no writes: the plugin opens `state.db` read-only through the public
-`hermes_state.SessionDB` API and only reads memory files. Editing memory stays with the `memory`
+`nastech_state.SessionDB` API and only reads memory files. Editing memory stays with the `memory`
 tool (prompt-cache safe).
 
 ## What you get
 
-A **Memory Wiki** tab in `hermes dashboard` (after *Sessions*) with:
+A **Memory Wiki** tab in `nastech dashboard` (after *Sessions*) with:
 
 - **Subjects** — topics extracted from session titles, file paths, tool names, slash commands,
   quoted phrases and CamelCase identifiers; each subject page lists related sessions and snippets.
@@ -35,43 +35,43 @@ Backend routes (mounted at `/api/plugins/memory-wiki/`, behind the dashboard's n
 | `GET /days/{date}` | one `YYYY-MM-DD` log (404 when unknown) |
 
 Profile scoping is handled by the host (`?profile=<name>` on any REST call); the routes resolve
-`HERMES_HOME` per request.
+`NASTECH_HOME` per request.
 
 ## Install
 
-From the Nous plugin catalog (pinned, reviewed commit):
+From the Nastech plugin catalog (pinned, reviewed commit):
 
 ```bash
-hermes plugins install hermes-memory-wiki --enable
+nastech plugins install nastech-memory-wiki --enable
 ```
 
 Or directly from this repository:
 
 ```bash
-hermes plugins install hermes-memory-wiki --enable
+nastech plugins install nastech-memory-wiki --enable
 ```
 
-Then start (or restart) the dashboard — `hermes dashboard` — and open the **Memory Wiki** tab. The
-plugin must be in `plugins.enabled` (the `--enable` flag or `hermes plugins enable memory-wiki`
+Then start (or restart) the dashboard — `nastech dashboard` — and open the **Memory Wiki** tab. The
+plugin must be in `plugins.enabled` (the `--enable` flag or `nastech plugins enable memory-wiki`
 does that); the web server never imports backend code from plugins you have not enabled.
 
-Uninstall: `hermes plugins remove memory-wiki`.
+Uninstall: `nastech plugins remove memory-wiki`.
 
-Requires Hermes Agent ≥ 0.21 (dashboard plugin SDK with `fetchJSON`).
+Requires Nastech Agent ≥ 0.21 (dashboard plugin SDK with `fetchJSON`).
 
 ## Layout
 
 ```
-hermes-memory-wiki/
+nastech-memory-wiki/
 ├── plugin.yaml                  # plugin manifest (name: memory-wiki)
 ├── __init__.py                  # register(ctx) — no tools/hooks; dashboard-only plugin
 ├── dashboard/
 │   ├── manifest.json            # tab declaration (/memory-wiki, icon Database)
 │   ├── plugin_api.py            # FastAPI router, mounted at /api/plugins/memory-wiki/
 │   ├── memory_wiki_core.py      # stdlib-only aggregation over SessionDB rows
-│   ├── src/index.jsx            # UI source (JSX, uses window.__HERMES_PLUGIN_SDK__)
+│   ├── src/index.jsx            # UI source (JSX, uses window.__NASTECH_PLUGIN_SDK__)
 │   └── dist/index.js            # committed build artefact the dashboard loads
-├── tests/                       # pytest (needs a hermes-agent checkout, see conftest.py)
+├── tests/                       # pytest (needs a nastech-agent checkout, see conftest.py)
 └── package.json                 # `npm run build` → dashboard/dist/index.js (esbuild)
 ```
 
@@ -80,8 +80,8 @@ hermes-memory-wiki/
 ```bash
 npm install                 # esbuild only; React comes from the host SDK at runtime
 npm run build               # rebuild dashboard/dist/index.js — commit the result
-HERMES_AGENT_REPO=~/.hermes/hermes-agent \
-  ~/.hermes/hermes-agent/.venv/bin/python -m pytest tests/ -o "addopts="
+NASTECH_AGENT_REPO=~/.nastech/nastech-agent \
+  ~/.nastech/nastech-agent/.venv/bin/python -m pytest tests/ -o "addopts="
 ```
 
 `dashboard/dist/index.js` is a plain IIFE; the dashboard caches it aggressively, so after a
@@ -91,14 +91,14 @@ rebuild restart the server or navigate away and back. Adding a manifest at runti
 ## Credits
 
 - **Abdullah Raja ([@Araja119](https://github.com/Araja119))** — original author of the Memory Wiki
-  (aggregation engine, API and dashboard page) in hermes-agent PR
-  [#31244](https://github.com/NousResearch/hermes-agent/pull/31244). Authorship is preserved via
+  (aggregation engine, API and dashboard page) in nastech-agent PR
+  [#31244](https://github.com/NastechResearch/nastech-agent/pull/31244). Authorship is preserved via
   `Co-authored-by` trailers on the commits that carry that code.
-- **Teknium / Nous Research** — salvage and hardening in
-  [#89940](https://github.com/NousResearch/hermes-agent/pull/89940) (Persistent Memory audit panel),
+- **Teknium / Nastech Research** — salvage and hardening in
+  [#89940](https://github.com/NastechResearch/nastech-agent/pull/89940) (Persistent Memory audit panel),
   and the conversion into this standalone plugin.
 - The "show curated memory in the dashboard" idea was independently proposed earlier by
-  [@scotty87](https://github.com/scotty87) in hermes-agent #33043.
+  [@scotty87](https://github.com/scotty87) in nastech-agent #33043.
 
 ## License
 

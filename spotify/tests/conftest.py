@@ -1,8 +1,8 @@
 """Test bootstrap: import the plugin directory as the package ``spotify_plugin``.
 
-The Hermes plugin loader imports a directory plugin as a package (``hermes_plugins.<slug>``) so the
-relative imports in ``__init__.py`` resolve; tests mirror that under a stable alias. Hermes core
-(``hermes_cli``, ``tools``) must be importable — run with a hermes-agent checkout on ``PYTHONPATH``.
+The Nastech plugin loader imports a directory plugin as a package (``nastech_plugins.<slug>``) so the
+relative imports in ``__init__.py`` resolve; tests mirror that under a stable alias. Nastech core
+(``nastech_cli``, ``tools``) must be importable — run with a nastech-agent checkout on ``PYTHONPATH``.
 """
 
 from __future__ import annotations
@@ -36,12 +36,12 @@ _load_plugin_package()
 
 
 @pytest.fixture(autouse=True)
-def _hermes_home(tmp_path, monkeypatch):
+def _nastech_home(tmp_path, monkeypatch):
     """Every test gets its own profile home: auth.json and .env land there, never in the real one."""
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "hermes"))
-    (tmp_path / "hermes").mkdir()
-    for var in ("HERMES_SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_ID", "HERMES_SPOTIFY_REDIRECT_URI",
-                "SPOTIFY_REDIRECT_URI", "HERMES_SPOTIFY_API_BASE_URL", "HERMES_SPOTIFY_ACCOUNTS_BASE_URL"):
+    monkeypatch.setenv("NASTECH_HOME", str(tmp_path / "nastech"))
+    (tmp_path / "nastech").mkdir()
+    for var in ("NASTECH_SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_ID", "NASTECH_SPOTIFY_REDIRECT_URI",
+                "SPOTIFY_REDIRECT_URI", "NASTECH_SPOTIFY_API_BASE_URL", "NASTECH_SPOTIFY_ACCOUNTS_BASE_URL"):
         monkeypatch.delenv(var, raising=False)
 
 

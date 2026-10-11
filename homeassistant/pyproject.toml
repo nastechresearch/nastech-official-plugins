@@ -1,14 +1,14 @@
 [project]
-name = "hermes-homeassistant"
+name = "nastech-homeassistant"
 version = "2.0.1"
-description = "Home Assistant gateway platform and smart-home tools for Hermes Agent (official plugin)"
+description = "Home Assistant gateway platform and smart-home tools for Nastech Agent (official plugin)"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "Nous Research" }]
+authors = [{ name = "Nastech Research" }]
 requires-python = ">=3.11"
 dependencies = [
   "aiohttp>=3.9,<4",
 ]
 
 [project.urls]
-Homepage = "https://github.com/NousResearch/hermes-official-plugins/tree/main/homeassistant"
+Homepage = "https://github.com/NastechResearch/nastech-official-plugins/tree/main/homeassistant"

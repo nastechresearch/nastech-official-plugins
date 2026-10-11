@@ -2,11 +2,11 @@
 name: snyk-security-scan
 description: "Scan code, dependencies, containers, IaC and SBOMs with Snyk via its first-party MCP server: authenticate, trust a folder, run the right scanner, read the findings, fix and re-scan. Includes package-health checks before adding a dependency."
 version: 1.0.0
-author: Nous Research
+author: Nastech Research
 license: MIT
 metadata:
   tags: "snyk, security, sast, sca, dependencies, vulnerabilities, container, iac, sbom, mcp"
-  hermes_related_skills: "requesting-code-review, security-guidance"
+  nastech_related_skills: "requesting-code-review, security-guidance"
 ---
 
 # Snyk Security Scan Skill
@@ -30,19 +30,19 @@ tells you how to remediate them.
 
 ## Prerequisites
 
-- The `snyk` plugin installed and enabled (`hermes plugins install snyk`, `hermes plugins enable snyk`,
-  then a NEW Hermes session so the MCP tools load). The server is launched with
+- The `snyk` plugin installed and enabled (`nastech plugins install snyk`, `nastech plugins enable snyk`,
+  then a NEW Nastech session so the MCP tools load). The server is launched with
   `npx -y snyk@<pinned> mcp -t stdio --profile full --DISABLE_ANALYTICS`, so Node.js/npm must be
   on `PATH`. Usage analytics are disabled in the manifest; the scans themselves are network calls.
 - A Snyk account (free tier covers code + open-source scanning). Nothing is prompted at install:
   the `snyk_auth` tool runs Snyk's browser login on demand and stores the token in the Snyk CLI's
-  own config, never in Hermes.
+  own config, never in Nastech.
 - For SCA, the project's package manager (npm, pip/uv, maven, gradle, ...) must be installed so
   Snyk can resolve the dependency tree.
 
 ## How to Run
 
-Tool names are prefixed by Hermes: `mcp__agent_plugin_snyk_8cb0f11d__sn__<tool>` when installed
+Tool names are prefixed by Nastech: `mcp__agent_plugin_snyk_8cb0f11d__sn__<tool>` when installed
 from the catalog (the hash derives from the install directory name; `tool_search` for "snyk"
 finds them either way). The suffix after `__sn__` is the Snyk tool name used below.
 
@@ -117,5 +117,5 @@ finds them either way). The suffix after `__sn__` is the Snyk tool name used bel
   account before the first scan.
 - A scan on a known-vulnerable fixture (e.g. `npm init -y && npm i lodash@4.17.15`) reports
   findings; after upgrading, the re-scan reports fewer.
-- `hermes plugins list` shows `snyk` enabled and a new session lists tools ending in
+- `nastech plugins list` shows `snyk` enabled and a new session lists tools ending in
   `__sn__snyk_code_scan`.

@@ -1,6 +1,6 @@
-"""hermes-homeassistant — Home Assistant gateway platform + smart-home tools for Hermes Agent.
+"""nastech-homeassistant — Home Assistant gateway platform + smart-home tools for Nastech Agent.
 
-Formerly built into hermes-agent core (``plugins/platforms/homeassistant`` and
+Formerly built into nastech-agent core (``plugins/platforms/homeassistant`` and
 ``tools/homeassistant_tool.py``). Everything a migrated install relies on is unchanged: platform name
 ``homeassistant``, toolset ``homeassistant``, tools ``ha_list_entities`` / ``ha_get_state`` /
 ``ha_list_services`` / ``ha_call_service``, env vars ``HASS_TOKEN`` / ``HASS_URL`` /
@@ -81,7 +81,7 @@ def _platform_kwargs() -> Dict[str, Any]:
 
 
 def _core_ships_home_assistant() -> bool:
-    """True on a Hermes core that still bundles Home Assistant (``tools/homeassistant_tool.py``, removed
+    """True on a Nastech core that still bundles Home Assistant (``tools/homeassistant_tool.py``, removed
     together with ``plugins/platforms/homeassistant`` when core dropped it).
 
     Looks only inside the imported ``tools`` package's own ``__path__``: a plain ``find_spec`` also
@@ -97,10 +97,10 @@ def _core_ships_home_assistant() -> bool:
 
 
 def register(ctx) -> None:
-    """Plugin entry point — called by the Hermes plugin loader."""
+    """Plugin entry point — called by the Nastech plugin loader."""
     if _core_ships_home_assistant():
         # Registering on top of the built-in would shadow core's ha_* tools and replace its adapter.
-        logger.info("homeassistant: this Hermes core still ships Home Assistant built in; "
+        logger.info("homeassistant: this Nastech core still ships Home Assistant built in; "
                     "the plugin stays inactive until core drops it")
         return
     ctx.register_platform(**_platform_kwargs())

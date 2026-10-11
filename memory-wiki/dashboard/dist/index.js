@@ -1,7 +1,7 @@
-/* hermes-memory-wiki dashboard bundle — built from dashboard/src/index.jsx with esbuild; edit the source, run npm run build. MIT, (c) 2026 Nous Research; original by @Araja119 (hermes-agent #31244). */
+/* nastech-memory-wiki dashboard bundle — built from dashboard/src/index.jsx with esbuild; edit the source, run npm run build. MIT, (c) 2026 Nastech Research; original by @Araja119 (nastech-agent #31244). */
 (() => {
   // dashboard/src/index.jsx
-  var SDK = window.__HERMES_PLUGIN_SDK__;
+  var SDK = window.__NASTECH_PLUGIN_SDK__;
   var { React } = SDK;
   var { useState, useEffect, useCallback } = SDK.hooks;
   var { Card, CardHeader, CardTitle, CardContent, Badge, Button, Input } = SDK.components;
@@ -156,7 +156,7 @@
     if (loading) return /* @__PURE__ */ React.createElement(LoadingState, null);
     if (error || !overview) return /* @__PURE__ */ React.createElement(ErrorState, { message: error ?? "Memory wiki unavailable" });
     const visibleSubjects = searchResults ?? overview.subjects ?? [];
-    return /* @__PURE__ */ React.createElement(PageShell, null, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-2" }, /* @__PURE__ */ React.createElement("div", { className: "text-sm text-muted-foreground" }, "Local session history"), /* @__PURE__ */ React.createElement("h1", { className: "text-3xl font-semibold tracking-tight" }, "Memory Wiki"), /* @__PURE__ */ React.createElement("p", { className: "max-w-3xl text-sm text-muted-foreground" }, "Browse deterministic subjects and daily logs generated from this Hermes profile's local session database.")), /* @__PURE__ */ React.createElement("div", { className: "grid gap-3 sm:grid-cols-3" }, /* @__PURE__ */ React.createElement(StatCard, { label: "Subjects", value: overview.subjects.length }), /* @__PURE__ */ React.createElement(StatCard, { label: "Daily logs", value: overview.daily_logs.length }), /* @__PURE__ */ React.createElement(StatCard, { label: "Recent sessions", value: overview.recent_sessions.length })), /* @__PURE__ */ React.createElement("div", { className: "max-w-xl" }, /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement(PageShell, null, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-2" }, /* @__PURE__ */ React.createElement("div", { className: "text-sm text-muted-foreground" }, "Local session history"), /* @__PURE__ */ React.createElement("h1", { className: "text-3xl font-semibold tracking-tight" }, "Memory Wiki"), /* @__PURE__ */ React.createElement("p", { className: "max-w-3xl text-sm text-muted-foreground" }, "Browse deterministic subjects and daily logs generated from this Nastech profile's local session database.")), /* @__PURE__ */ React.createElement("div", { className: "grid gap-3 sm:grid-cols-3" }, /* @__PURE__ */ React.createElement(StatCard, { label: "Subjects", value: overview.subjects.length }), /* @__PURE__ */ React.createElement(StatCard, { label: "Daily logs", value: overview.daily_logs.length }), /* @__PURE__ */ React.createElement(StatCard, { label: "Recent sessions", value: overview.recent_sessions.length })), /* @__PURE__ */ React.createElement("div", { className: "max-w-xl" }, /* @__PURE__ */ React.createElement(
       Input,
       {
         value: search,
@@ -225,5 +225,5 @@
     if (route.view === "day") return /* @__PURE__ */ React.createElement(DayView, { date: route.id, go });
     return /* @__PURE__ */ React.createElement(OverviewView, { go });
   }
-  window.__HERMES_PLUGINS__.register(PLUGIN_NAME, MemoryWikiPage);
+  window.__NASTECH_PLUGINS__.register(PLUGIN_NAME, MemoryWikiPage);
 })();

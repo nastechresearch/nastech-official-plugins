@@ -51,7 +51,7 @@ def test_native_argv_enables_only_known_long_context_models(profile, tmp_path):
 
 def test_sonnet_5_5_never_receives_the_thinking_disable():
     """Sonnet 5.5 answers ``thinking: {type: disabled}`` with a 400 (docs: thinking can't be turned
-    off; lowest setting is ``between_tools``). `sonnet` now resolves to it, so Hermes' reasoning-off
+    off; lowest setting is ``between_tools``). `sonnet` now resolves to it, so Nastech' reasoning-off
     calls (title generation, ``/reasoning none``) must omit the disable on every spelling, while
     plain Sonnet 5, which still accepts it, keeps receiving it."""
     import directsdk

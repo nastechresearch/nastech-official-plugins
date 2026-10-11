@@ -1,8 +1,8 @@
 """Test bootstrap: import the plugin directory as the package ``homeassistant_plugin``.
 
-The Hermes plugin loader imports a directory plugin as a package (``hermes_plugins.<slug>``) so the
-relative imports in ``__init__.py`` resolve; tests mirror that under a stable alias. Hermes core
-(``gateway``, ``agent``, ...) must be importable — run with a hermes-agent checkout on ``PYTHONPATH``.
+The Nastech plugin loader imports a directory plugin as a package (``nastech_plugins.<slug>``) so the
+relative imports in ``__init__.py`` resolve; tests mirror that under a stable alias. Nastech core
+(``gateway``, ``agent``, ...) must be importable — run with a nastech-agent checkout on ``PYTHONPATH``.
 
 The adapter resolves ``Platform("homeassistant")``. Once core no longer ships a ``HOMEASSISTANT``
 enum member, that only resolves for a platform the registry knows, so register the plugin's real

@@ -1,6 +1,6 @@
 name: tests
 
-# Every plugin in this repo, against current Hermes core, on Linux, macOS and Windows.
+# Every plugin in this repo, against current Nastech core, on Linux, macOS and Windows.
 # The nightly run catches a core change that breaks a plugin before a user does.
 on:
   push:
@@ -38,37 +38,37 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.plugin }} · ${{ matrix.os }}
     steps:
-      - name: Allow long paths (hermes-agent's i18n docs tree exceeds MAX_PATH)
+      - name: Allow long paths (nastech-agent's i18n docs tree exceeds MAX_PATH)
         if: runner.os == 'Windows'
         run: git config --system core.longpaths true
       - uses: actions/checkout@v4
         with:
           path: pantheon
-      # Plugins import Hermes core (gateway, agent, tools) from a checkout, the way an installed plugin does.
+      # Plugins import Nastech core (gateway, agent, tools) from a checkout, the way an installed plugin does.
       - uses: actions/checkout@v4
         with:
-          repository: NousResearch/hermes-agent
-          path: hermes-agent
-      # Hermes core gates its runtime dependencies on python_version >= '3.14'.
+          repository: NastechResearch/nastech-agent
+          path: nastech-agent
+      # Nastech core gates its runtime dependencies on python_version >= '3.14'.
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-      - name: Install hermes-agent and the plugin's dependencies
+      - name: Install nastech-agent and the plugin's dependencies
         shell: bash
         run: |
-          python -m pip install -e ./hermes-agent pytest pytest-asyncio
+          python -m pip install -e ./nastech-agent pytest pytest-asyncio
           deps=$(python -c 'import pathlib,sys,tomllib; p=pathlib.Path(sys.argv[1]); print("\n".join(tomllib.loads(p.read_text())["project"].get("dependencies", [])) if p.is_file() else "")' "pantheon/${{ matrix.plugin }}/pyproject.toml")
           if [ -n "$deps" ]; then printf '%s\n' "$deps" > "$RUNNER_TEMP/plugin-reqs.txt"; python -m pip install -r "$RUNNER_TEMP/plugin-reqs.txt"; fi
       - name: Validate the manifest against core
         shell: bash
-        run: python -m hermes_cli.main plugins validate "pantheon/${{ matrix.plugin }}"
+        run: python -m nastech_cli.main plugins validate "pantheon/${{ matrix.plugin }}"
         env:
-          HERMES_HOME: ${{ runner.temp }}/hermes-home
-          PYTHONPATH: ${{ github.workspace }}/hermes-agent
+          NASTECH_HOME: ${{ runner.temp }}/nastech-home
+          PYTHONPATH: ${{ github.workspace }}/nastech-agent
       - name: Run the plugin suite
         if: hashFiles(format('pantheon/{0}/tests/**', matrix.plugin)) != ''
         working-directory: pantheon/${{ matrix.plugin }}
         env:
-          HERMES_AGENT_REPO: ${{ github.workspace }}/hermes-agent
-          PYTHONPATH: ${{ github.workspace }}/hermes-agent
+          NASTECH_AGENT_REPO: ${{ github.workspace }}/nastech-agent
+          PYTHONPATH: ${{ github.workspace }}/nastech-agent
         run: python -m pytest -q

@@ -23,8 +23,8 @@ except ImportError:
 INSTALL_HINT = ("Claude Code is not installed (no `claude` on PATH or in the usual install directories). Install it with "
                 "`npm install -g @anthropic-ai/claude-code` or set CLAUDE_SUBSCRIPTION_DIRECTSDK_COMMAND to the binary.")
 LOGIN_HINT = "Claude Code is installed but not logged in. Run `claude auth login`, then select this provider again."
-LOGGED_OUT_HINT = ("Claude Code is installed but has no usable login in the environment Hermes runs it in. Run `claude auth login` "
-                   "as the user Hermes runs as, set CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`) in Hermes' environment, "
+LOGGED_OUT_HINT = ("Claude Code is installed but has no usable login in the environment Nastech runs it in. Run `claude auth login` "
+                   "as the user Nastech runs as, set CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`) in Nastech' environment, "
                    "or point CLAUDE_SUBSCRIPTION_DIRECTSDK_CONFIG_DIR at a logged-in config directory, then try again.")
 
 
@@ -51,7 +51,7 @@ def _resolve(command, env):
 
 
 # The plugin's settings live at plugins.entries.<manifest name>.settings in the active profile's
-# config.yaml (plugin.yaml `config_schema`; Desktop → Capabilities → Plugins, or `hermes config set`).
+# config.yaml (plugin.yaml `config_schema`; Desktop → Capabilities → Plugins, or `nastech config set`).
 PLUGIN_ID = "claude-subscription-directsdk-experimental"
 TELEMETRY_SETTING = "claude_code_telemetry"
 # Any one of these turns off Claude Code's feature-flag fetch, and with it every model its picker
@@ -69,11 +69,11 @@ def telemetry_enabled():
     """The ``claude_code_telemetry`` plugin setting, default on.
 
     Read from the active profile's config on every call (``load_config_readonly`` resolves
-    ``get_hermes_home()`` per call and caches on the file signature), so a multi-profile gateway
+    ``get_nastech_home()`` per call and caches on the file signature), so a multi-profile gateway
     honors each profile's choice and a change applies to the next spawn without a restart.
     """
     try:
-        from hermes_cli.config import load_config_readonly
+        from nastech_cli.config import load_config_readonly
         value = load_config_readonly()
     except Exception:
         return True
@@ -89,7 +89,7 @@ def telemetry_enabled():
 def apply_traffic_policy(env, telemetry=None):
     """Set the plugin's Claude Code traffic flags on a child ``env`` (in place) and return it.
 
-    Never removes anything: a flag the user exported in Hermes' own environment
+    Never removes anything: a flag the user exported in Nastech' own environment
     (``DISABLE_TELEMETRY``, ``DO_NOT_TRACK``, ...) still reaches the child with the setting on.
     """
     env.update(ALWAYS_QUIET)
@@ -135,7 +135,7 @@ def setup_status(command=None, env=None, timeout=20):
 
 
 def discover_models(command=None, env=None, timeout=40):
-    """The account's live picker as ``[{id, label, note, upstream_requests}]`` in Hermes route ids,
+    """The account's live picker as ``[{id, label, note, upstream_requests}]`` in Nastech route ids,
     or ``None`` when the CLI is missing, logged out, or the handshake fails."""
     env = dict(env if env is not None else os.environ)
     resolved = _resolve(command, env)
@@ -150,7 +150,7 @@ def discover_models(command=None, env=None, timeout=40):
         argv = resolved + ["-p", "--model", "sonnet", "--input-format", "stream-json", "--output-format", "stream-json",
                            "--verbose", "--tools", "", "--setting-sources", "", "--strict-mcp-config",
                            "--mcp-config", '{"mcpServers":{}}', "--disable-slash-commands", "--no-session-persistence"]
-        handshake = json.dumps({"type": "control_request", "request_id": "hermes-picker",
+        handshake = json.dumps({"type": "control_request", "request_id": "nastech-picker",
                                 "request": {"subtype": "initialize"}}) + "\n"
         with tempfile.TemporaryDirectory(prefix="claude-directsdk-picker-") as cwd:
             run = subprocess.run(argv, input=handshake, env=child, cwd=cwd, capture_output=True,

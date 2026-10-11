@@ -27,7 +27,7 @@ def events(mode):
     if mode == 'thinking':
         blocks = [{'type':'thinking', 'thinking':'fixture thought', 'signature':'fixture-signature'}]
     if mode in ('tools', 'tool_max'):
-        blocks += [{'type':'tool_use', 'id':'host_tool_1', 'name':'mcp__hermes__read_file', 'input':{'path':'fixture.txt'}}]
+        blocks += [{'type':'tool_use', 'id':'host_tool_1', 'name':'mcp__nastech__read_file', 'input':{'path':'fixture.txt'}}]
     if mode == 'unknown_tool':
         # A Tool Search-deferred tool called directly by the name tool_describe showed (#39).
         blocks += [{'type':'tool_use', 'id':'host_tool_1', 'name':'mcp__fastmail__draft_email', 'input':{'to':'fixture'}}]
@@ -98,7 +98,7 @@ def run(binary):
             peer.entered, peer.disconnected = threading.Event(), threading.Event()
             thread = threading.Thread(target=peer.serve_forever, daemon=True)
             thread.start()
-            env = {'PATH':os.defpath, 'HOME':home, 'HERMES_HOME':home, 'XDG_CONFIG_HOME':home, 'CLAUDE_CONFIG_DIR':home,
+            env = {'PATH':os.defpath, 'HOME':home, 'NASTECH_HOME':home, 'XDG_CONFIG_HOME':home, 'CLAUDE_CONFIG_DIR':home,
                    'ANTHROPIC_API_KEY':'fixture-not-a-real-key', 'ANTHROPIC_BASE_URL':f'http://127.0.0.1:{peer.server_port}',
                    'DISABLE_TELEMETRY':'1', 'DISABLE_ERROR_REPORTING':'1'}
             client = directsdk.Client(command=binary, env=env, timeout=10)
@@ -127,7 +127,7 @@ def run(binary):
                         elif mode in ('tools', 'tool_max'):
                             assert result.choices[0].message.tool_calls[0].function.name == 'read_file'
                         elif mode == 'unknown_tool':
-                            # Hermes' unknown-tool path answers it; the next request replays that exchange.
+                            # Nastech' unknown-tool path answers it; the next request replays that exchange.
                             message = result.choices[0].message.model_dump()
                             assert message['tool_calls'][0]['function']['name'] == 'mcp__fastmail__draft_email'
                             peer.mode = 'final'

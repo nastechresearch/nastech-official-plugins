@@ -23,7 +23,7 @@ def test_host_history_edits_replay_canonical_visible_blocks():
     history = [{"role": "user", "content": "write"}, msg, {"role": "tool", "tool_call_id": "t1", "content": "ok"}]
     original = copy.deepcopy(history)
     assert native.prepare_history(history)[1][1]["message"]["content"] == blocks
-    # Hermes compaction keeps tool-call arguments byte-exact and only demotes tool-result bodies, so the
+    # Nastech compaction keeps tool-call arguments byte-exact and only demotes tool-result bodies, so the
     # signed native blocks must survive it verbatim.
     history[2]["content"] = "[tool result demoted]"
     assert native.prepare_history(history)[1][1]["message"]["content"] == blocks
@@ -41,8 +41,8 @@ def test_host_history_edits_replay_canonical_visible_blocks():
 
 
 def test_edited_history_replays_a_call_outside_the_inventory_by_its_own_name():
-    # Hermes answered a directly-called deferred tool with its unknown-tool error (#39); after a
-    # host edit, rebuilt history must not rename it into the mcp__hermes__ namespace.
+    # Nastech answered a directly-called deferred tool with its unknown-tool error (#39); after a
+    # host edit, rebuilt history must not rename it into the mcp__nastech__ namespace.
     calls = [{"id": "t1", "type": "function", "function": {"name": "mcp__fastmail__draft_email", "arguments": "{}"}},
              {"id": "t2", "type": "function", "function": {"name": "write_file", "arguments": "{}"}}]
     history = [{"role": "user", "content": "draft"}, {"role": "assistant", "content": "Drafting.", "tool_calls": calls},

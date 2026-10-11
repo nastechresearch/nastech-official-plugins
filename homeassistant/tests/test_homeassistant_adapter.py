@@ -3,7 +3,7 @@
 Tests real logic: state change formatting, event filtering pipeline,
 cooldown behavior, env seeding, and adapter initialization.
 
-Moved from hermes-agent core ``tests/gateway/test_homeassistant.py``.
+Moved from nastech-agent core ``tests/gateway/test_homeassistant.py``.
 """
 
 import errno
@@ -301,7 +301,7 @@ class TestSendViaRestApi:
         # Verify the REST API was called with correct payload
         call_args = mock_session.post.call_args
         assert "/api/services/persistent_notification/create" in call_args[0][0]
-        assert call_args[1]["json"]["title"] == NOTIFICATION_TITLE == "Hermes Agent"
+        assert call_args[1]["json"]["title"] == NOTIFICATION_TITLE == "Nastech Agent"
         assert call_args[1]["json"]["message"] == "Test notification"
         assert "Bearer tok" in call_args[1]["headers"]["Authorization"]
 
@@ -323,7 +323,7 @@ class TestLocalNetworkConnectHint:
         """The same errno from a Terminal-run gateway (or another OS) must not be blamed on macOS."""
         from homeassistant_plugin.adapter import _connect_error_detail
 
-        monkeypatch.delenv("HERMES_SUPERVISED_CHILD", raising=False)
+        monkeypatch.delenv("NASTECH_SUPERVISED_CHILD", raising=False)
         monkeypatch.delenv("XPC_SERVICE_NAME", raising=False)
         err = OSError(errno.EHOSTUNREACH, "No route to host")
         assert _connect_error_detail(err) == str(err)
@@ -334,7 +334,7 @@ class TestLocalNetworkConnectHint:
         """Only the launchd-supervised gateway can be denied by Local Network Privacy (#71206)."""
         from homeassistant_plugin.adapter import _connect_error_detail
 
-        monkeypatch.setenv("HERMES_SUPERVISED_CHILD", "1")
+        monkeypatch.setenv("NASTECH_SUPERVISED_CHILD", "1")
         err = OSError(errno.EHOSTUNREACH, "No route to host")
         detail = _connect_error_detail(err)
         assert detail.startswith(str(err))
@@ -350,7 +350,7 @@ class TestMultiplexEndpointScope:
     """Under ``gateway.multiplex_profiles`` os.environ holds the DEFAULT profile; a secondary profile's
     HASS_TOKEN must never be posted to the default profile's HASS_URL.
 
-    Moved from hermes-agent core ``tests/gateway/test_multiplex_endpoint_identity_scope.py``."""
+    Moved from nastech-agent core ``tests/gateway/test_multiplex_endpoint_identity_scope.py``."""
 
     DEFAULT = {"HASS_URL": "http://default-ha.example:8123", "HASS_TOKEN": "default-ha-token"}
     SECONDARY = {"HASS_URL": "http://bot2-ha.example:8123", "HASS_TOKEN": "bot2-ha-token"}

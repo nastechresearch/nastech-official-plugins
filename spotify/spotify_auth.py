@@ -1,11 +1,11 @@
 """Spotify OAuth (loopback PKCE): login, refresh, runtime credentials, status and logout.
 
-Formerly ``hermes_cli/auth_spotify.py`` in hermes-agent core. Tokens stay where core kept them
+Formerly ``nastech_cli/auth_spotify.py`` in nastech-agent core. Tokens stay where core kept them
 (``providers.spotify`` in the profile's ``auth.json``, written under the auth-store lock), so an
 install that logged in while Spotify was built into core keeps its login, and other plugins that
 read that state (``spotify-desktop``) keep working.
 
-Hermes internals are imported lazily, inside the functions, from the modules that define them.
+Nastech internals are imported lazily, inside the functions, from the modules that define them.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ PROVIDER = "spotify"
 DEFAULT_ACCOUNTS_BASE_URL = "https://accounts.spotify.com"
 DEFAULT_API_BASE_URL = "https://api.spotify.com/v1"
 DEFAULT_REDIRECT_URI = "http://127.0.0.1:43827/spotify/callback"
-DOCS_URL = "https://hermes-agent.nousresearch.com/docs/user-guide/features/spotify"
+DOCS_URL = "https://nastech-agent.nastechresearch.com/docs/user-guide/features/spotify"
 DASHBOARD_URL = "https://developer.spotify.com/dashboard"
 ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 120
 DEFAULT_SCOPE = " ".join((
@@ -34,7 +34,7 @@ DEFAULT_SCOPE = " ".join((
 
 
 def _err(message: str, code: Optional[str] = None, *, relogin: bool = False):
-    from hermes_cli.auth_constants import AuthError
+    from nastech_cli.auth_constants import AuthError
     return AuthError(message, provider=PROVIDER, code=code, relogin_required=relogin)
 
 
@@ -52,7 +52,7 @@ def _setting(
     explicit: Optional[str] = None, strip_slash: bool = False,
 ) -> str:
     """First non-empty of explicit arg, env vars (``.env`` aware), stored state, then *default*."""
-    from hermes_cli.config import get_env_value
+    from nastech_cli.config import get_env_value
     candidates = (
         explicit, *(get_env_value(var) for var in env_vars),
         state.get(state_key) if isinstance(state, dict) else None, default,
@@ -67,24 +67,24 @@ def _setting(
 
 
 def _client_id(explicit: Optional[str] = None, state: Optional[dict[str, Any]] = None) -> str:
-    client_id = _setting(state, "client_id", ("HERMES_SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_ID"), "", explicit=explicit)
+    client_id = _setting(state, "client_id", ("NASTECH_SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_ID"), "", explicit=explicit)
     if client_id:
         return client_id
-    raise _err("Spotify client_id is required. Set HERMES_SPOTIFY_CLIENT_ID or pass --client-id.",
+    raise _err("Spotify client_id is required. Set NASTECH_SPOTIFY_CLIENT_ID or pass --client-id.",
                "spotify_client_id_missing")
 
 
 def _redirect_uri(explicit: Optional[str] = None, state: Optional[dict[str, Any]] = None) -> str:
-    return _setting(state, "redirect_uri", ("HERMES_SPOTIFY_REDIRECT_URI", "SPOTIFY_REDIRECT_URI"),
+    return _setting(state, "redirect_uri", ("NASTECH_SPOTIFY_REDIRECT_URI", "SPOTIFY_REDIRECT_URI"),
                     DEFAULT_REDIRECT_URI, explicit=explicit)
 
 
 def _api_base_url(state: Optional[dict[str, Any]] = None) -> str:
-    return _setting(state, "api_base_url", ("HERMES_SPOTIFY_API_BASE_URL",), DEFAULT_API_BASE_URL, strip_slash=True)
+    return _setting(state, "api_base_url", ("NASTECH_SPOTIFY_API_BASE_URL",), DEFAULT_API_BASE_URL, strip_slash=True)
 
 
 def _accounts_base_url(state: Optional[dict[str, Any]] = None) -> str:
-    return _setting(state, "accounts_base_url", ("HERMES_SPOTIFY_ACCOUNTS_BASE_URL",), DEFAULT_ACCOUNTS_BASE_URL,
+    return _setting(state, "accounts_base_url", ("NASTECH_SPOTIFY_ACCOUNTS_BASE_URL",), DEFAULT_ACCOUNTS_BASE_URL,
                     strip_slash=True)
 
 
@@ -113,7 +113,7 @@ def _validate_redirect_uri(redirect_uri: str) -> tuple[str, int, str]:
 
 
 def _wait_for_callback(redirect_uri: str, *, timeout_seconds: float = 180.0) -> dict[str, Any]:
-    from hermes_cli.auth_device_flow import (
+    from nastech_cli.auth_device_flow import (
         _bind_loopback_callback_server, _make_loopback_callback_handler, _serve_loopback_callback)
     host, port, path = _validate_redirect_uri(redirect_uri)
     handler_cls, result = _make_loopback_callback_handler(path, display_name="Spotify")
@@ -127,7 +127,7 @@ def _token_payload_to_state(
     token_payload: dict[str, Any], *, client_id: str, redirect_uri: str, requested_scope: str,
     accounts_base_url: str, api_base_url: str, previous_state: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
-    from hermes_cli.auth import _coerce_ttl_seconds
+    from nastech_cli.auth import _coerce_ttl_seconds
     now = datetime.now(timezone.utc)
     expires_in = _coerce_ttl_seconds(token_payload.get("expires_in", 0))
     expires_at = datetime.fromtimestamp(now.timestamp() + expires_in, tz=timezone.utc)
@@ -175,7 +175,7 @@ def _token_post(
 def refresh_oauth_state(state: dict[str, Any], *, timeout_seconds: float = 20.0) -> dict[str, Any]:
     refresh_token = _clean(state.get("refresh_token"))
     if not refresh_token:
-        raise _err("Spotify refresh token missing. Run `hermes spotify login` again.",
+        raise _err("Spotify refresh token missing. Run `nastech spotify login` again.",
                    "spotify_refresh_token_missing", relogin=True)
 
     client_id = _client_id(state=state)
@@ -186,7 +186,7 @@ def refresh_oauth_state(state: dict[str, Any], *, timeout_seconds: float = 20.0)
         timeout_seconds=timeout_seconds, what="token refresh", failed_code="spotify_refresh_failed",
         invalid_code="spotify_refresh_invalid",
         invalid_message="Spotify refresh response did not include an access_token.",
-        failed_suffix=" Run `hermes spotify login` again.", relogin_required=True,
+        failed_suffix=" Run `nastech spotify login` again.", relogin_required=True,
     )
     return _token_payload_to_state(
         payload, client_id=client_id, redirect_uri=_redirect_uri(state=state),
@@ -200,15 +200,15 @@ def resolve_runtime_credentials(
     *, force_refresh: bool = False, refresh_if_expiring: bool = True,
     refresh_skew_seconds: int = ACCESS_TOKEN_REFRESH_SKEW_SECONDS,
 ) -> dict[str, Any]:
-    from hermes_cli.auth import (
+    from nastech_cli.auth import (
         _auth_store_lock, _is_expiring, _load_auth_store, _load_provider_state, _quarantine_flat_oauth_state,
         _save_auth_store, _store_provider_state)
-    from hermes_cli.auth_constants import AuthError
+    from nastech_cli.auth_constants import AuthError
     with _auth_store_lock():
         auth_store = _load_auth_store()
         state = _load_provider_state(auth_store, PROVIDER)
         if not state:
-            raise _err("Spotify is not authenticated. Run `hermes spotify login` first.",
+            raise _err("Spotify is not authenticated. Run `nastech spotify login` first.",
                        "spotify_auth_missing", relogin=True)
 
         should_refresh = bool(force_refresh)
@@ -231,7 +231,7 @@ def resolve_runtime_credentials(
 
     access_token = _clean(state.get("access_token"))
     if not access_token:
-        raise _err("Spotify access token missing. Run `hermes spotify login` again.",
+        raise _err("Spotify access token missing. Run `nastech spotify login` again.",
                    "spotify_access_token_missing", relogin=True)
 
     return {
@@ -246,7 +246,7 @@ def resolve_runtime_credentials(
 
 
 def auth_status() -> dict[str, Any]:
-    from hermes_cli.auth import _is_expiring, get_provider_auth_state
+    from nastech_cli.auth import _is_expiring, get_provider_auth_state
     state = get_provider_auth_state(PROVIDER)
     if not state:
         return {"logged_in": False}
@@ -263,15 +263,15 @@ def auth_status() -> dict[str, Any]:
 
 def logout() -> bool:
     """Drop the stored Spotify login. True when something was removed."""
-    from hermes_cli.auth import clear_provider_auth
+    from nastech_cli.auth import clear_provider_auth
     return clear_provider_auth(PROVIDER)
 
 
 def _interactive_setup(redirect_uri_hint: str) -> str:
     """Walk the user through creating a Spotify developer app; persist the client_id to the profile's .env."""
-    from hermes_cli.auth_device_flow import _is_remote_session
-    from hermes_cli.cli_output import line_input
-    from hermes_cli.config import save_env_value
+    from nastech_cli.auth_device_flow import _is_remote_session
+    from nastech_cli.cli_output import line_input
+    from nastech_cli.config import save_env_value
     print(
         f"\n{'=' * 70}\nSpotify first-time setup\n{'=' * 70}\n\n"
         "Spotify requires every user to register their own lightweight\n"
@@ -281,7 +281,7 @@ def _interactive_setup(redirect_uri_hint: str) -> str:
         "Steps:\n"
         f"  1. Opening {DASHBOARD_URL} in your browser...\n"
         "  2. Click 'Create app' and fill in:\n"
-        "       App name:     anything (e.g. hermes-agent)\n"
+        "       App name:     anything (e.g. nastech-agent)\n"
         "       Description:  anything\n"
         f"       Redirect URI: {redirect_uri_hint}\n"
         "       API/SDK:      Web API\n"
@@ -304,23 +304,23 @@ def _interactive_setup(redirect_uri_hint: str) -> str:
         raise SystemExit("Spotify setup cancelled: empty Client ID.")
 
     # Persist so later runs skip the wizard; only pin a NON-default redirect URI.
-    save_env_value("HERMES_SPOTIFY_CLIENT_ID", raw)
+    save_env_value("NASTECH_SPOTIFY_CLIENT_ID", raw)
     if redirect_uri_hint and redirect_uri_hint != DEFAULT_REDIRECT_URI:
-        save_env_value("HERMES_SPOTIFY_REDIRECT_URI", redirect_uri_hint)
-    print("\nSaved HERMES_SPOTIFY_CLIENT_ID to the profile's .env\n")
+        save_env_value("NASTECH_SPOTIFY_REDIRECT_URI", redirect_uri_hint)
+    print("\nSaved NASTECH_SPOTIFY_CLIENT_ID to the profile's .env\n")
     return raw
 
 
 def login(args) -> None:
-    from hermes_cli.auth import (
+    from nastech_cli.auth import (
         _auth_store_lock, _load_auth_store, _save_auth_store, _store_provider_state, get_provider_auth_state)
-    from hermes_cli.auth_constants import AuthError
-    from hermes_cli.auth_device_flow import (
+    from nastech_cli.auth_constants import AuthError
+    from nastech_cli.auth_device_flow import (
         _can_open_graphical_browser, _is_remote_session, _pkce_code_challenge, _pkce_code_verifier,
         _print_loopback_ssh_hint)
     existing_state = get_provider_auth_state(PROVIDER) or {}
 
-    # No client_id anywhere -> wizard instead of "HERMES_SPOTIFY_CLIENT_ID is required".
+    # No client_id anywhere -> wizard instead of "NASTECH_SPOTIFY_CLIENT_ID is required".
     try:
         client_id = _client_id(getattr(args, "client_id", None), existing_state)
     except AuthError as exc:
@@ -343,7 +343,7 @@ def login(args) -> None:
     print(
         f"Starting Spotify PKCE login...\nClient ID: {client_id}\nRedirect URI: {redirect_uri}\n"
         "Make sure this redirect URI is allow-listed in your Spotify app settings.\n\n"
-        f"Open this URL to authorize Hermes:\n{authorize_url}\n\nFull setup guide: {DOCS_URL}\n"
+        f"Open this URL to authorize Nastech:\n{authorize_url}\n\nFull setup guide: {DOCS_URL}\n"
     )
     _print_loopback_ssh_hint(redirect_uri, docs_url=DOCS_URL)
     if open_browser and not _is_remote_session() and _can_open_graphical_browser():

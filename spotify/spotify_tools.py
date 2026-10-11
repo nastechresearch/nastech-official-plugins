@@ -1,4 +1,4 @@
-"""Spotify tools for Hermes (registered by this plugin's ``register(ctx)``).
+"""Spotify tools for Nastech (registered by this plugin's ``register(ctx)``).
 
 Each tool routes ``args["action"]`` through a dict dispatch table; every entry
 has the signature ``(client, args, action) -> str`` and issues its Spotify Web

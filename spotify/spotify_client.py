@@ -34,7 +34,7 @@ class SpotifyClient:
         self._runtime = self._resolve_runtime(refresh_if_expiring=True)
 
     def _resolve_runtime(self, *, force_refresh: bool = False, refresh_if_expiring: bool = True) -> dict[str, Any]:
-        from hermes_cli.auth_constants import AuthError
+        from nastech_cli.auth_constants import AuthError
         try:
             return resolve_runtime_credentials(force_refresh=force_refresh, refresh_if_expiring=refresh_if_expiring)
         except AuthError as exc:
@@ -102,13 +102,13 @@ def _extract_spotify_error_detail(response: httpx.Response, *, fallback: str) ->
 def _friendly_spotify_error_message(*, status_code: int, detail: str, path: str, retry_after: Optional[str]) -> str:
     is_playback_path = path.startswith("/me/player")
     if status_code == 401:
-        return "Spotify authentication failed or expired. Run `hermes spotify login` again."
+        return "Spotify authentication failed or expired. Run `nastech spotify login` again."
     if status_code == 403:
         if is_playback_path:
             return ("Spotify rejected this playback request. Playback control usually requires a Spotify Premium account "
                     "and an active Spotify Connect device.")
         if "scope" in detail.lower() or "permission" in detail.lower():
-            return "Spotify rejected the request because the current auth scope is insufficient. Re-run `hermes spotify login` to refresh permissions."
+            return "Spotify rejected the request because the current auth scope is insufficient. Re-run `nastech spotify login` to refresh permissions."
         return "Spotify rejected the request. The account may not have permission for this action."
     if status_code == 404:
         return "Spotify could not find an active playback device or player session for this request." if is_playback_path else "Spotify resource not found."

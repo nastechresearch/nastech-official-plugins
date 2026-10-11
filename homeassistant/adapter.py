@@ -2,8 +2,8 @@
 
 Requires aiohttp, HASS_TOKEN (Long-Lived Access Token) and HASS_URL (default http://homeassistant.local:8123).
 
-Moved out of hermes-agent core (``plugins/platforms/homeassistant/adapter.py``) into the standalone
-``hermes-homeassistant`` plugin; behaviour is unchanged. Registration lives in the package ``__init__``.
+Moved out of nastech-agent core (``plugins/platforms/homeassistant/adapter.py``) into the standalone
+``nastech-homeassistant`` plugin; behaviour is unchanged. Registration lives in the package ``__init__``.
 """
 
 import asyncio
@@ -32,7 +32,7 @@ from gateway.platforms._shared import get_scoped_secret as _get_scoped_secret, s
 logger = logging.getLogger(__name__)
 
 # Title of the persistent notification outbound replies are posted as.
-NOTIFICATION_TITLE = "Hermes Agent"
+NOTIFICATION_TITLE = "Nastech Agent"
 
 
 def check_ha_requirements() -> bool:
@@ -83,8 +83,8 @@ def _connect_error_detail(exc: BaseException) -> str:
             and getattr(os_error, "errno", None) == errno.EHOSTUNREACH):
         return (
             f"{text} — macOS Local Network Privacy is blocking this launchd gateway from the LAN. "
-            "Run `hermes gateway install` to regenerate the launchd job, then `hermes gateway restart`. "
-            "https://github.com/NousResearch/hermes-agent/issues/71206"
+            "Run `nastech gateway install` to regenerate the launchd job, then `nastech gateway restart`. "
+            "https://github.com/NastechResearch/nastech-agent/issues/71206"
         )
     return text
 

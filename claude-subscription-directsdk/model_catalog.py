@@ -9,7 +9,7 @@ CONTEXT_WINDOWS = {
     'claude-opus-4-8': 1_000_000,
     'claude-fable-5-1': 1_000_000,
 }
-# Families that 400 on ``thinking: {"type": "disabled"}`` (the same contract Hermes core keeps
+# Families that 400 on ``thinking: {"type": "disabled"}`` (the same contract Nastech core keeps
 # in agent/anthropic_adapter.py). A caller's disable is omitted for them, which beats a dead
 # request. That does not turn thinking down: a reasoning-off request on these routes carries no
 # `thinking` and no effort (neither `output_config.effort` nor `--effort`), so the model thinks

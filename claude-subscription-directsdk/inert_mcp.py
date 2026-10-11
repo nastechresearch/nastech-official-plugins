@@ -11,11 +11,11 @@ def main():
         method = row.get('method')
         result = {}
         if method == 'initialize':
-            result = {'protocolVersion': '2024-11-05', 'capabilities': {'tools': {}}, 'serverInfo': {'name': 'hermes-inert-inventory', 'version': '1'}}
+            result = {'protocolVersion': '2024-11-05', 'capabilities': {'tools': {}}, 'serverInfo': {'name': 'nastech-inert-inventory', 'version': '1'}}
         elif method == 'tools/list':
             result = {'tools': manifest}
         elif method == 'tools/call':
-            result = {'isError': True, 'content': [{'type': 'text', 'text': 'Denied: native tools are inert; only Hermes executes tools.'}]}
+            result = {'isError': True, 'content': [{'type': 'text', 'text': 'Denied: native tools are inert; only Nastech executes tools.'}]}
         if 'id' in row:
             print(json.dumps({'jsonrpc': '2.0', 'id': row['id'], 'result': result}), flush=True)
 

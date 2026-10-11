@@ -1,6 +1,6 @@
 # Snyk MCP tools (pinned CLI 1.1306.0, `--profile full`)
 
-Generated from a live `tools/list` handshake against the pinned server. Hermes exposes each as
+Generated from a live `tools/list` handshake against the pinned server. Nastech exposes each as
 `mcp__agent_plugin_snyk_<hash>__sn__<name>`. `*` marks required arguments.
 
 ## snyk_aibom

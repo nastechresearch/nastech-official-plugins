@@ -1,4 +1,4 @@
-"""``hermes spotify login|status|logout`` (formerly ``hermes auth spotify``)."""
+"""``nastech spotify login|status|logout`` (formerly ``nastech auth spotify``)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from . import spotify_auth
 
 def setup_cli(parser) -> None:
     parser.add_argument("action", nargs="?", choices=["login", "status", "logout"], default="login")
-    parser.add_argument("--client-id", help="Spotify app client_id (or set HERMES_SPOTIFY_CLIENT_ID)")
+    parser.add_argument("--client-id", help="Spotify app client_id (or set NASTECH_SPOTIFY_CLIENT_ID)")
     parser.add_argument("--redirect-uri", help="Allow-listed localhost redirect URI for your Spotify app")
     parser.add_argument("--scope", help="Override requested Spotify scopes")
     parser.add_argument("--no-browser", action="store_true", help="Do not attempt to open the browser automatically")

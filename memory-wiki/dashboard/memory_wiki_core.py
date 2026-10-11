@@ -1,8 +1,8 @@
 """Memory Wiki aggregation — deterministic subject/daily-log derivation over session history.
 
-Originally ``hermes_cli/memory_wiki.py`` by Abdullah Raja (@Araja119, hermes-agent PR #31244),
+Originally ``nastech_cli/memory_wiki.py`` by Abdullah Raja (@Araja119, nastech-agent PR #31244),
 salvaged in #89940 and moved into this standalone plugin. Stays stdlib-only: the helpers are
-deterministic heuristics over the session/message dictionaries ``hermes_state.SessionDB``
+deterministic heuristics over the session/message dictionaries ``nastech_state.SessionDB``
 returns (``list_sessions_rich`` / ``get_messages``); no LLM calls, no writes.
 """
 
@@ -45,7 +45,7 @@ _STOPWORDS = {
     "for",
     "from",
     "help",
-    "hermes",
+    "nastech",
     "i",
     "in",
     "into",
@@ -72,7 +72,7 @@ _PACKAGE_NAMES = {
     "django",
     "fastapi",
     "flask",
-    "hermes-agent",
+    "nastech-agent",
     "nextjs",
     "nodejs",
     "pytest",

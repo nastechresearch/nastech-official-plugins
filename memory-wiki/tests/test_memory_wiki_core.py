@@ -1,4 +1,4 @@
-"""Aggregation tests for dashboard/memory_wiki_core.py (ported from hermes-agent PR #31244 / #89940)."""
+"""Aggregation tests for dashboard/memory_wiki_core.py (ported from nastech-agent PR #31244 / #89940)."""
 
 
 def test_slugify_subject_name(memory_wiki_core):
@@ -51,7 +51,7 @@ def test_extract_subject_candidates_structured_text_mentions(memory_wiki_core):
         [
             {
                 "role": "user",
-                "content": 'Use "Memory Wiki" from /memory and update HermesAgent next.',
+                "content": 'Use "Memory Wiki" from /memory and update NastechAgent next.',
             }
         ],
     )
@@ -59,7 +59,7 @@ def test_extract_subject_candidates_structured_text_mentions(memory_wiki_core):
 
     assert "memory wiki" in names
     assert "/memory" in names
-    assert "HermesAgent" in names
+    assert "NastechAgent" in names
 
 
 def test_extract_subject_candidates_nested_tool_calls_and_malformed_tool_calls(memory_wiki_core):
@@ -117,7 +117,7 @@ def test_extract_subject_candidates_hyphenated_title_alias(memory_wiki_core):
 
 def test_build_memory_overview_aggregates_subjects_and_daily_logs(memory_wiki_core, tmp_path):
     build_memory_overview = memory_wiki_core.build_memory_overview
-    from hermes_state import SessionDB
+    from nastech_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     try:
@@ -157,7 +157,7 @@ def test_memory_subject_and_daily_log_detail_lookup_and_query_filter(memory_wiki
     build_memory_subjects = memory_wiki_core.build_memory_subjects
     get_daily_log = memory_wiki_core.get_daily_log
     get_memory_subject = memory_wiki_core.get_memory_subject
-    from hermes_state import SessionDB
+    from nastech_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     try:
@@ -285,10 +285,10 @@ def test_memory_wiki_aggregators_bound_loaded_history(memory_wiki_core):
     assert set(db.message_session_ids) == {f"s-{index}" for index in range(100)}
 
 
-def test_build_memory_notes_reads_profile_memory_files(memory_wiki_core, hermes_home):
+def test_build_memory_notes_reads_profile_memory_files(memory_wiki_core, nastech_home):
     build_memory_notes = memory_wiki_core.build_memory_notes
 
-    memories = hermes_home / "memories"
+    memories = nastech_home / "memories"
     memories.mkdir()
     (memories / "MEMORY.md").write_text(
         "Prefers rebase merges\n§\nCI watcher is canonical\n", encoding="utf-8"
@@ -302,7 +302,7 @@ def test_build_memory_notes_reads_profile_memory_files(memory_wiki_core, hermes_
     assert notes["user"] == ["Name: Teknium"]
 
 
-def test_build_memory_notes_missing_files_yield_empty_lists(memory_wiki_core, hermes_home):
+def test_build_memory_notes_missing_files_yield_empty_lists(memory_wiki_core, nastech_home):
     build_memory_notes = memory_wiki_core.build_memory_notes
 
     notes = build_memory_notes()

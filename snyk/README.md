@@ -1,10 +1,10 @@
-<p align="center"><img src="../assets/snyk.jpg" alt="Snyk: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/snyk.jpg" alt="Snyk: official Nastech Agent plugin" width="100%"></p>
 
-# hermes-plugin-snyk
+# nastech-plugin-snyk
 
-> Part of [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-plugin-snyk`](https://github.com/NousResearch/hermes-plugin-snyk), which is archived; this directory carries its full history.
+> Part of [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-plugin-snyk`](https://github.com/NastechResearch/nastech-plugin-snyk), which is archived; this directory carries its full history.
 
-Scan code, dependencies, container images, IaC and SBOMs from Hermes Agent
+Scan code, dependencies, container images, IaC and SBOMs from Nastech Agent
 through [Snyk](https://snyk.io)'s first-party MCP server. Snyk ships the
 server *inside* the Snyk CLI (`snyk mcp` is a vendor subcommand, not a
 community wrapper), so this plugin is a pinned `npx` stdio launch plus a
@@ -22,22 +22,22 @@ install ships:
 ## Install
 
 ```bash
-hermes plugins install snyk       # from the Nous plugin catalog
-hermes plugins enable snyk
+nastech plugins install snyk       # from the Nastech plugin catalog
+nastech plugins enable snyk
 ```
 
-Then start a new Hermes session. The skill is available as
+Then start a new Nastech session. The skill is available as
 `agent-plugin-snyk-8cb0f11d:snyk-security-scan` via `skill_view` (`skills_list`
 shows the exact name). Node.js/npm must be on `PATH` (the server is
 launched with `npx -y snyk@1.1306.0 mcp -t stdio --profile full`). The first
 launch downloads the pinned CLI.
 
-No credentials are needed at install time. Ask Hermes to run the `snyk_auth`
+No credentials are needed at install time. Ask Nastech to run the `snyk_auth`
 tool before the first scan: it opens Snyk's browser login and stores the token
-in the Snyk CLI's own config, never in Hermes. A free Snyk account covers the
+in the Snyk CLI's own config, never in Nastech. A free Snyk account covers the
 code (SAST) and open-source (SCA) scanners.
 
-Health check without Hermes:
+Health check without Nastech:
 
 ```bash
 npx -y snyk@1.1306.0 mcp -t stdio --profile full --DISABLE_ANALYTICS <<'EOF'
@@ -53,7 +53,7 @@ EOF
 `snyk_breakability_check`, `snyk_auth`, `snyk_trust`, `snyk_logout`,
 `snyk_version`, `snyk_send_feedback`.
 
-Hermes exposes them as `mcp__agent_plugin_snyk_8cb0f11d__sn__<tool>` (the hash
+Nastech exposes them as `mcp__agent_plugin_snyk_8cb0f11d__sn__<tool>` (the hash
 is derived from the install directory name `snyk`). The
 server key is `sn` rather than `snyk` because the longest tool name
 (`snyk_package_health_check`) lands exactly on the 64-character function-name
@@ -76,13 +76,13 @@ name at 62 or less.
 
 `mcp.json` pins `snyk@1.1306.0` (published 2026-07-09). Bumping the pin is a
 commit to this repo followed by a reviewed SHA bump in the
-[hermes-agent plugin catalog](https://github.com/NousResearch/hermes-agent/tree/main/plugin-catalog).
+[nastech-agent plugin catalog](https://github.com/NastechResearch/nastech-agent/tree/main/plugin-catalog).
 `@latest` is deliberately not used.
 
 ## Attribution
 
 Catalog research, tool pruning rationale and validation originate from
-[hermes-agent #73860](https://github.com/NousResearch/hermes-agent/pull/73860),
-re-homed here as a standalone plugin per the hermes-agent policy that
+[nastech-agent #73860](https://github.com/NastechResearch/nastech-agent/pull/73860),
+re-homed here as a standalone plugin per the nastech-agent policy that
 third-party product integrations ship outside the core tree. Snyk and the
 Snyk CLI are products of Snyk Ltd. MIT.

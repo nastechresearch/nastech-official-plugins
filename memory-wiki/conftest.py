@@ -1,7 +1,7 @@
-"""Test bootstrap: put the hermes-agent checkout on ``sys.path`` (for ``hermes_state`` /
+"""Test bootstrap: put the nastech-agent checkout on ``sys.path`` (for ``nastech_state`` /
 ``tools.memory_tool`` / FastAPI) and expose the plugin's modules by path.
 
-Set ``HERMES_AGENT_REPO`` to point at a checkout; defaults to ``~/.hermes/hermes-agent``.
+Set ``NASTECH_AGENT_REPO`` to point at a checkout; defaults to ``~/.nastech/nastech-agent``.
 """
 
 from __future__ import annotations
@@ -15,10 +15,10 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent
 DASHBOARD_DIR = REPO_ROOT / "dashboard"
-HERMES_AGENT_REPO = Path(os.environ.get("HERMES_AGENT_REPO", Path.home() / ".hermes" / "hermes-agent"))
+NASTECH_AGENT_REPO = Path(os.environ.get("NASTECH_AGENT_REPO", Path.home() / ".nastech" / "nastech-agent"))
 
-if str(HERMES_AGENT_REPO) not in sys.path:
-    sys.path.insert(0, str(HERMES_AGENT_REPO))
+if str(NASTECH_AGENT_REPO) not in sys.path:
+    sys.path.insert(0, str(NASTECH_AGENT_REPO))
 
 collect_ignore = ["__init__.py", "dashboard"]
 
@@ -36,18 +36,18 @@ def _load_by_path(module_name: str, path: Path):
 
 @pytest.fixture(scope="session")
 def memory_wiki_core():
-    return _load_by_path("hermes_dashboard_plugin_memory_wiki_core", DASHBOARD_DIR / "memory_wiki_core.py")
+    return _load_by_path("nastech_dashboard_plugin_memory_wiki_core", DASHBOARD_DIR / "memory_wiki_core.py")
 
 
 @pytest.fixture(scope="session")
 def plugin_api():
-    return _load_by_path("hermes_dashboard_plugin_memory_wiki_api", DASHBOARD_DIR / "plugin_api.py")
+    return _load_by_path("nastech_dashboard_plugin_memory_wiki_api", DASHBOARD_DIR / "plugin_api.py")
 
 
 @pytest.fixture
-def hermes_home(tmp_path, monkeypatch):
-    """Isolated HERMES_HOME so the plugin never reads the developer's real state.db / memories."""
-    home = tmp_path / "hermes-home"
+def nastech_home(tmp_path, monkeypatch):
+    """Isolated NASTECH_HOME so the plugin never reads the developer's real state.db / memories."""
+    home = tmp_path / "nastech-home"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("NASTECH_HOME", str(home))
     return home

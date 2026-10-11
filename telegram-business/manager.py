@@ -31,10 +31,10 @@ for the Send button to appear, ``/biz pause`` globally suspends drafting,
 and per-chat pauses live in ``telegram_business_connections.paused_chats``.
 
 State lives in two SQLite tables in the plugin's own database file
-(``<HERMES_HOME>/telegram-business/state.db``) — see ``state.py`` for the
-schema. Hermes' core state.db is never touched.
+(``<NASTECH_HOME>/telegram-business/state.db``) — see ``state.py`` for the
+schema. Nastech' core state.db is never touched.
 
-This module is glued onto the Hermes Telegram adapter by ``__init__.py``
+This module is glued onto the Nastech Telegram adapter by ``__init__.py``
 via ``ctx.register_telegram_handler`` — the adapter invokes the plugin's
 factory at connect() time and the factory wires PTB update handlers plus
 an inline-button callback prefix (``bd:`` for "business draft"). The host

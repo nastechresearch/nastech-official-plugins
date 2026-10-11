@@ -1,5 +1,5 @@
 // src/plugin.tsx
-import { $accentOverride as $accentOverride2, PALETTE_AREA, setAccentOverride as setAccentOverride2, STATUSBAR_AREAS } from "@hermes/plugin-sdk";
+import { $accentOverride as $accentOverride2, PALETTE_AREA, setAccentOverride as setAccentOverride2, STATUSBAR_AREAS } from "@nastech/plugin-sdk";
 
 // src/picker.tsx
 import {
@@ -15,12 +15,12 @@ import {
   setAccentOverride,
   useTheme,
   useValue
-} from "@hermes/plugin-sdk";
+} from "@nastech/plugin-sdk";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 var SWATCHES = [
-  { hex: "#0053FD", name: "Nous blue \xB7 263\xB0 (light seed)" },
-  { hex: "#4a84fe", name: "Nous blue \xB7 263\xB0 (dark seed)" },
+  { hex: "#0053FD", name: "Nastech blue \xB7 263\xB0 (light seed)" },
+  { hex: "#4a84fe", name: "Nastech blue \xB7 263\xB0 (dark seed)" },
   { hex: "#1540B1", name: "Psyche blue \xB7 264\xB0" },
   { hex: "#0969da", name: "GitHub blue \xB7 257\xB0" },
   { hex: "#196d31", name: "GitHub green \xB7 148\xB0" },

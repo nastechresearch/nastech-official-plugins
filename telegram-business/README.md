@@ -1,12 +1,12 @@
-<p align="center"><img src="../assets/telegram-business.jpg" alt="Telegram Business Mode: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/telegram-business.jpg" alt="Telegram Business Mode: official Nastech Agent plugin" width="100%"></p>
 
-# hermes-telegram-business
+# nastech-telegram-business
 
-> Part of [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-telegram-business`](https://github.com/NousResearch/hermes-telegram-business), which is archived; this directory carries its full history.
+> Part of [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-telegram-business`](https://github.com/NastechResearch/nastech-telegram-business), which is archived; this directory carries its full history.
 
-**Observe-with-approval Telegram Business Mode (secretary bot) for [Hermes Agent](https://github.com/NousResearch/hermes-agent).**
+**Observe-with-approval Telegram Business Mode (secretary bot) for [Nastech Agent](https://github.com/NastechResearch/nastech-agent).**
 
-Connect your Telegram Business account to your Hermes bot and it becomes your secretary: every incoming customer message gets an LLM-drafted reply delivered to **your** DM with inline buttons — **nothing reaches the customer until you tap Send.**
+Connect your Telegram Business account to your Nastech bot and it becomes your secretary: every incoming customer message gets an LLM-drafted reply delivered to **your** DM with inline buttons — **nothing reaches the customer until you tap Send.**
 
 ```
 Customer → your Business account (via Business Mode)
@@ -35,20 +35,20 @@ Discard → dropped, the customer sees nothing
 
 ## Requirements
 
-- Hermes Agent with plugin Telegram-handler support (`ctx.register_telegram_handler`, hermes-agent PR #59159 / v0.18+)
+- Nastech Agent with plugin Telegram-handler support (`ctx.register_telegram_handler`, nastech-agent PR #59159 / v0.18+)
 - A Telegram **Business** subscription on your personal account
-- Your Hermes Telegram bot with **Business Mode** toggled on in [@BotFather](https://t.me/BotFather)
-- python-telegram-bot ≥ 21.1 (already installed with the Hermes Telegram platform)
+- Your Nastech Telegram bot with **Business Mode** toggled on in [@BotFather](https://t.me/BotFather)
+- python-telegram-bot ≥ 21.1 (already installed with the Nastech Telegram platform)
 
 ## Install
 
 ```bash
-git clone https://github.com/NousResearch/hermes-official-plugins/tree/main/telegram-business \
-    ~/.hermes/plugins/telegram-business
-hermes plugins enable telegram-business
+git clone https://github.com/NastechResearch/nastech-official-plugins/tree/main/telegram-business \
+    ~/.nastech/plugins/telegram-business
+nastech plugins enable telegram-business
 ```
 
-Restart the gateway (`hermes gateway restart`). Then:
+Restart the gateway (`nastech gateway restart`). Then:
 
 1. @BotFather → your bot → **Business Mode** → enable.
 2. Telegram → **Settings → Business → Chatbots** → add your bot → pick which chats it can see, and whether it can **reply on your behalf** (needed for the Send button).
@@ -64,7 +64,7 @@ Restart the gateway (`hermes gateway restart`). Then:
 
 ## Configuration
 
-Optional block in `~/.hermes/config.yaml`:
+Optional block in `~/.nastech/config.yaml`:
 
 ```yaml
 plugins:
@@ -78,11 +78,11 @@ plugins:
         Friendly, brief, always suggest a concrete next step.
 ```
 
-Drafting uses your active Hermes model through the host-owned plugin LLM surface (`ctx.llm`) — no separate API key.
+Drafting uses your active Nastech model through the host-owned plugin LLM surface (`ctx.llm`) — no separate API key.
 
 ## State
 
-Plugin-owned SQLite at `~/.hermes/telegram-business/state.db` (two tables: connections + drafts). Hermes' core state is never touched. Delete the file to reset.
+Plugin-owned SQLite at `~/.nastech/telegram-business/state.db` (two tables: connections + drafts). Nastech' core state is never touched. Delete the file to reset.
 
 ## v1 limits
 
@@ -100,7 +100,7 @@ python3 -m pytest
 
 ## Credits
 
-Based on the design and implementation from [hermes-agent#30055](https://github.com/NousResearch/hermes-agent/pull/30055), replatformed as a standalone plugin. Related earlier community proposals: [#26654](https://github.com/NousResearch/hermes-agent/pull/26654) by @evgyur (earliest submission), [#35342](https://github.com/NousResearch/hermes-agent/pull/35342) by @MilekhinAV, [#46728](https://github.com/NousResearch/hermes-agent/pull/46728) by @kxnkxv.
+Based on the design and implementation from [nastech-agent#30055](https://github.com/NastechResearch/nastech-agent/pull/30055), replatformed as a standalone plugin. Related earlier community proposals: [#26654](https://github.com/NastechResearch/nastech-agent/pull/26654) by @evgyur (earliest submission), [#35342](https://github.com/NastechResearch/nastech-agent/pull/35342) by @MilekhinAV, [#46728](https://github.com/NastechResearch/nastech-agent/pull/46728) by @kxnkxv.
 
 ## License
 

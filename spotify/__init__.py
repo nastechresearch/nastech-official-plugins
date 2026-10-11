@@ -1,10 +1,10 @@
-"""hermes-spotify — Spotify playback, search, playlists and library tools for Hermes Agent.
+"""nastech-spotify — Spotify playback, search, playlists and library tools for Nastech Agent.
 
-Formerly built into hermes-agent core (``plugins/spotify`` + ``hermes_cli/auth_spotify.py``). What a
+Formerly built into nastech-agent core (``plugins/spotify`` + ``nastech_cli/auth_spotify.py``). What a
 migrated install relies on is unchanged: toolset ``spotify``, the seven ``spotify_*`` tool names and
-schemas, env vars ``HERMES_SPOTIFY_CLIENT_ID`` / ``HERMES_SPOTIFY_REDIRECT_URI``, and the stored login
-(``providers.spotify`` in the profile's ``auth.json``). Login moves from ``hermes auth spotify`` to
-``hermes spotify login``.
+schemas, env vars ``NASTECH_SPOTIFY_CLIENT_ID`` / ``NASTECH_SPOTIFY_REDIRECT_URI``, and the stored login
+(``providers.spotify`` in the profile's ``auth.json``). Login moves from ``nastech auth spotify`` to
+``nastech spotify login``.
 
 Wiring goes only through the public plugin API (``ctx.register_tool`` / ``ctx.register_cli_command``).
 """
@@ -28,7 +28,7 @@ _TOOLS = (
 
 
 def register(ctx) -> None:
-    """Plugin entry point — called by the Hermes plugin loader.
+    """Plugin entry point — called by the Nastech plugin loader.
 
     On a core that still bundles ``plugins/spotify`` this installed copy has the same plugin key and
     directory name, so discovery loads it instead of the bundled one (never both); the stored login is

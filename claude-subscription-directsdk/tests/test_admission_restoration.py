@@ -220,7 +220,7 @@ def test_unprovable_restoration_forwards_the_native_payload_unchanged(queried, n
             pass
         finally:
             conn.close()
-        assert gate.unrestored == "Native request does not uniquely match Hermes tool results"
+        assert gate.unrestored == "Native request does not uniquely match Nastech tool results"
         assert gate.failure is None
         # Nothing is dropped or rewritten: native's own frame goes upstream (only a marker may move).
         assert len(received) == 1
@@ -307,8 +307,8 @@ def test_actual_client_replays_restored_parallel_rounds_after_recreation(tmp_pat
             blocks = [
                 {"type": "thinking", "thinking": "fixture reasoning", "signature": f"signed-{turn}"},
                 {"type": "text", "text": "Calling parallel tools."},
-                {"type": "tool_use", "id": f"r{turn}a", "name": "mcp__hermes__probe", "input": {"lane": "a"}},
-                {"type": "tool_use", "id": f"r{turn}b", "name": "mcp__hermes__probe", "input": {"lane": "b"}},
+                {"type": "tool_use", "id": f"r{turn}a", "name": "mcp__nastech__probe", "input": {"lane": "a"}},
+                {"type": "tool_use", "id": f"r{turn}b", "name": "mcp__nastech__probe", "input": {"lane": "b"}},
             ]
             for index, block in enumerate(blocks):
                 events.extend([{"type": "content_block_start", "index": index, "content_block": block},
@@ -417,7 +417,7 @@ def test_nested_cache_marker_on_discarded_native_text_is_rejected():
     "\nSession context: a wording no CLI has shipped yet",
     "\n\nToday's date is 2031-01-01.",
 ])
-def test_restoration_is_anchored_on_hermes_ids_and_content_not_native_wording(annotation):
+def test_restoration_is_anchored_on_nastech_ids_and_content_not_native_wording(annotation):
     native = [{**RESULT, "content": RESULT["content"] + annotation}]
     restored = json.loads(restore_queried_turn(wire(native), [RESULT]))
     assert restored["messages"][-1]["content"] == [RESULT]

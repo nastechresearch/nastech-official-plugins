@@ -1,35 +1,35 @@
-<p align="center"><img src="../assets/homeassistant.jpg" alt="Home Assistant: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/homeassistant.jpg" alt="Home Assistant: official Nastech Agent plugin" width="100%"></p>
 
-# Home Assistant for Hermes Agent
+# Home Assistant for Nastech Agent
 
-> Part of the [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-homeassistant`](https://github.com/NousResearch/hermes-homeassistant), which is archived; this directory carries its full history.
+> Part of the [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-homeassistant`](https://github.com/NastechResearch/nastech-homeassistant), which is archived; this directory carries its full history.
 
-Official [Hermes Agent](https://github.com/NousResearch/hermes-agent) plugin for
+Official [Nastech Agent](https://github.com/NastechResearch/nastech-agent) plugin for
 [Home Assistant](https://www.home-assistant.io/). It provides two things:
 
 1. **Gateway platform `homeassistant`**: subscribes to Home Assistant's WebSocket event bus and
    forwards `state_changed` events to the agent, with domain/entity filters and per-entity cooldowns.
-   The agent's replies show up as Home Assistant persistent notifications titled "Hermes Agent".
+   The agent's replies show up as Home Assistant persistent notifications titled "Nastech Agent".
    Cron jobs can deliver to `deliver=homeassistant[:target]` through the `notify.notify` service,
    without a running gateway.
 2. **Toolset `homeassistant`**: four tools the model can call to query and control devices over the
    REST API: `ha_list_entities`, `ha_get_state`, `ha_list_services`, `ha_call_service`.
 
-This used to be built into Hermes core. It now ships as a standalone plugin with the same platform
+This used to be built into Nastech core. It now ships as a standalone plugin with the same platform
 name, toolset, tool names and schemas, env vars and config keys. **If you already used Home
-Assistant with Hermes, you don't need to change anything:** `hermes update` (or the first start
+Assistant with Nastech, you don't need to change anything:** `nastech update` (or the first start
 after updating) installs and enables this plugin for you.
 
 ## Install
 
-From the Hermes plugin catalog:
+From the Nastech plugin catalog:
 
 ```bash
-hermes plugins install homeassistant
+nastech plugins install homeassistant
 ```
 
-The plugin's only Python dependency is `aiohttp` (`>=3.9,<4`, resolved under Hermes's own pins). It
-needs a Hermes Agent release of `0.21.5` or newer.
+The plugin's only Python dependency is `aiohttp` (`>=3.9,<4`, resolved under Nastech's own pins). It
+needs a Nastech Agent release of `0.21.5` or newer.
 
 ## Configuration
 
@@ -38,12 +38,12 @@ needs a Hermes Agent release of `0.21.5` or newer.
 1. Open your Home Assistant instance.
 2. Go to your **Profile** (click your name in the sidebar).
 3. Scroll to **Long-Lived Access Tokens**.
-4. Click **Create Token**, name it something like "Hermes Agent", and copy it.
+4. Click **Create Token**, name it something like "Nastech Agent", and copy it.
 
 ### 2. Environment variables
 
 ```bash
-# ~/.hermes/.env
+# ~/.nastech/.env
 
 # Required: your Long-Lived Access Token
 HASS_TOKEN=your-long-lived-access-token
@@ -65,17 +65,17 @@ HASS_HOME_CHANNEL=mobile_app_my_phone
 ### 3. Tools
 
 The four tools only appear when `HASS_TOKEN` is set. Turn the `homeassistant` toolset on or off per
-platform with `hermes tools`.
+platform with `nastech tools`.
 
 ### 4. Gateway platform
 
 ```bash
-hermes gateway
+nastech gateway
 ```
 
 By default, **no events are forwarded**. Configure at least one of `watch_domains`, `watch_entities`
 or `watch_all`, otherwise a warning is logged at startup and every state change is dropped. Settings
-go under the platform's `extra` section in `~/.hermes/config.yaml`:
+go under the platform's `extra` section in `~/.nastech/config.yaml`:
 
 ```yaml
 platforms:
@@ -130,12 +130,12 @@ WebSocket) using your `HASS_TOKEN`. It stores no state and sends no telemetry.
 
 ## Development
 
-Tests need a hermes-agent checkout on `PYTHONPATH` plus `pytest` and `pytest-asyncio`:
+Tests need a nastech-agent checkout on `PYTHONPATH` plus `pytest` and `pytest-asyncio`:
 
 ```bash
-PYTHONPATH=/path/to/hermes-agent python -m pytest tests -q
+PYTHONPATH=/path/to/nastech-agent python -m pytest tests -q
 ```
 
 ## License
 
-MIT, see [LICENSE](LICENSE). Copyright (c) 2026 Nous Research.
+MIT, see [LICENSE](LICENSE). Copyright (c) 2026 Nastech Research.

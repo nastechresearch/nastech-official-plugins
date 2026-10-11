@@ -8,8 +8,8 @@ OK="${GREEN}✔${NC}"; FAIL="${RED}✘${NC}"; WARN="${YELLOW}⚠${NC}"
 
 TWOZERO_URL="https://www.404zero.com/pisang/twozero.tox"
 TOX_PATH="$HOME/Downloads/twozero.tox"
-HERMES_HOME_DIR="${HERMES_HOME:-$HOME/.hermes}"
-HERMES_CFG="${HERMES_HOME_DIR}/config.yaml"
+NASTECH_HOME_DIR="${NASTECH_HOME:-$HOME/.nastech}"
+NASTECH_CFG="${NASTECH_HOME_DIR}/config.yaml"
 MCP_PORT=40404
 MCP_ENDPOINT="http://localhost:${MCP_PORT}/mcp"
 
@@ -46,9 +46,9 @@ fi
 # ── 3. Warn about stale MCP entries from earlier setups ──
 # The touchdesigner plugin registers the MCP server itself; a leftover
 # mcp_servers entry would load the same hub twice under two names.
-if [[ -f "$HERMES_CFG" ]] && grep -qE '^\s+(twozero_td|touchdesigner):' "$HERMES_CFG" 2>/dev/null; then
+if [[ -f "$NASTECH_CFG" ]] && grep -qE '^\s+(twozero_td|touchdesigner):' "$NASTECH_CFG" 2>/dev/null; then
     echo -e " ${WARN} Legacy twozero_td/touchdesigner entry found under mcp_servers"
-    manual_steps+=("Remove the old twozero_td/touchdesigner entry from mcp_servers in ${HERMES_CFG} (the touchdesigner plugin now provides the server)")
+    manual_steps+=("Remove the old twozero_td/touchdesigner entry from mcp_servers in ${NASTECH_CFG} (the touchdesigner plugin now provides the server)")
 else
     echo -e " ${OK} No stale mcp_servers entry"
 fi

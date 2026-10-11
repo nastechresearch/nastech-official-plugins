@@ -1,4 +1,4 @@
-"""Failures carry the status Hermes routes retry and fallback on, and a watchdog kill reads as a timeout."""
+"""Failures carry the status Nastech routes retry and fallback on, and a watchdog kill reads as a timeout."""
 import os
 import sys
 
@@ -16,7 +16,7 @@ def _native(tmp_path, native_error, create_client=directsdk.Client):
     return create_client(command=[sys.executable, str(native)], env={'PATH': os.defpath, 'HOME': str(tmp_path), 'NATIVE_ERROR': native_error})
 
 
-NATIVE_ERRORS = {  # native's error code -> (its text, the status Hermes sees)
+NATIVE_ERRORS = {  # native's error code -> (its text, the status Nastech sees)
     'rate_limit': ("You've hit your session limit · resets 3:45pm", 429),
     'billing_error': ('Credit balance is too low', 402),
     'overloaded': ('API Error: Overloaded', 529),
@@ -70,7 +70,7 @@ def test_watchdog_kill_classifies_like_a_timeout(profile):
         return v.reason, v.retryable, v.should_fallback
 
     killed = RuntimeError('Claude request cancelled')
-    # Without the hook Hermes retries the kill as unknown, each attempt waiting out the full stale timeout again.
+    # Without the hook Nastech retries the kill as unknown, each attempt waiting out the full stale timeout again.
     assert verdict(killed, provider='')[0] == FailoverReason.unknown
     assert verdict(killed) == verdict(TimeoutError('Claude request timed out')) == (FailoverReason.timeout, True, False)
     for other in (RuntimeError('Native request failed: error_during_execution'), InterruptedError('Agent interrupted during API call'),

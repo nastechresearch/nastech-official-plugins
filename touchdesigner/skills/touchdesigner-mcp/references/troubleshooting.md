@@ -133,19 +133,19 @@ n.cook(force=True)
 actual = str(n.width) + 'x' + str(n.height)
 ```
 
-## 5. Hermes Configuration
+## 5. Nastech Configuration
 
 ### Config location
 
-`$HERMES_HOME/config.yaml` (defaults to `~/.hermes/config.yaml` when `HERMES_HOME` is unset)
+`$NASTECH_HOME/config.yaml` (defaults to `~/.nastech/config.yaml` when `NASTECH_HOME` is unset)
 
 ### MCP entry format
 
 The server comes from the `touchdesigner` plugin (`mcp.json` inside the plugin,
 `http://127.0.0.1:40404/mcp`, Streamable HTTP). Check it is enabled:
 ```bash
-hermes plugins list --plain | grep -w td
-hermes plugins enable td
+nastech plugins list --plain | grep -w td
+nastech plugins enable td
 ```
 If you find an old `twozero_td` or `touchdesigner` entry under `mcp_servers`
 in config.yaml (written by earlier versions of this skill), remove it — the
@@ -153,7 +153,7 @@ plugin replaces it.
 
 ### After config changes
 
-Restart the Hermes session for changes to take effect. The MCP connection is
+Restart the Nastech session for changes to take effect. The MCP connection is
 established at session startup.
 
 ### Verifying MCP tools are available

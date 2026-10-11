@@ -2,12 +2,12 @@ name: claude-subscription-directsdk-experimental
 kind: model-provider
 version: 0.3.3
 manifest_version: 2
-description: Claude Subscription DirectSDK (Experimental) — drive your Claude Pro/Max subscription through the official Claude Code CLI; Hermes owns tools, approvals and compaction
-author: Nous Research
+description: Claude Subscription DirectSDK (Experimental) — drive your Claude Pro/Max subscription through the official Claude Code CLI; Nastech owns tools, approvals and compaction
+author: Nastech Research
 license: MIT
-homepage: https://github.com/NousResearch/hermes-official-plugins/tree/main/claude-subscription-directsdk
+homepage: https://github.com/NastechResearch/nastech-official-plugins/tree/main/claude-subscription-directsdk
 tags: [model-provider, anthropic, claude, subscription, experimental]
-requires_hermes: ">=0.21.4"
+requires_nastech: ">=0.21.4"
 platforms: []
 optional_env:
   - CLAUDE_SUBSCRIPTION_DIRECTSDK_COMMAND

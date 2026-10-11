@@ -6,5 +6,5 @@ description: >
   account and DMs them to the owner with [Send] [Edit] [Discard] inline
   buttons — nothing reaches the customer until the owner approves.
   No auto-send exists, even when can_reply is granted.
-author: "Nous Research"
-homepage: https://github.com/NousResearch/hermes-official-plugins/tree/main/telegram-business
+author: "Nastech Research"
+homepage: https://github.com/NastechResearch/nastech-official-plugins/tree/main/telegram-business

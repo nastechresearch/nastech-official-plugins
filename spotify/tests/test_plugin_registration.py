@@ -1,4 +1,4 @@
-"""register(ctx) wiring: the seven tools and the ``hermes spotify`` command go through the public plugin
+"""register(ctx) wiring: the seven tools and the ``nastech spotify`` command go through the public plugin
 API with the exact names, toolset and schemas a migrated install depends on."""
 
 from __future__ import annotations

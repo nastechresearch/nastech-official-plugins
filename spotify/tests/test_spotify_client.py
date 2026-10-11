@@ -1,6 +1,6 @@
 """Spotify Web API client: 401 retry, empty-204 payloads, URI normalisation, auth error wrapping.
 
-Moved from hermes-agent core ``tests/tools/test_spotify_client.py``.
+Moved from nastech-agent core ``tests/tools/test_spotify_client.py``.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ import json
 
 import pytest
 
-from hermes_cli.auth_constants import AuthError
+from nastech_cli.auth_constants import AuthError
 from spotify_plugin import spotify_client as spotify_mod
 
 

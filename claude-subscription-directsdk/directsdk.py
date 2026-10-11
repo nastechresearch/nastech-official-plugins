@@ -32,14 +32,14 @@ except ImportError:
     from directsdk_setup import INSTALL_HINT, LOGGED_OUT_HINT, _resolve as resolve_claude, apply_traffic_policy
 
 
-# Hermes picks retry vs fallback from an error's status_code (main loop and auxiliary ladder alike).
+# Nastech picks retry vs fallback from an error's status_code (main loop and auxiliary ladder alike).
 class ClaudeCodeMissing(RuntimeError):
     """The official Claude Code CLI this transport drives is not installed (or not on PATH)."""
     status_code = 503
 
 
 class ClaudeCodeLoggedOut(RuntimeError):
-    """Claude Code refused before any upstream request because it has no usable login where Hermes runs it."""
+    """Claude Code refused before any upstream request because it has no usable login where Nastech runs it."""
     status_code = 401
 
 
@@ -62,7 +62,7 @@ NATIVE_ERROR_STATUS = {
 
 
 CARRIER = 'claude-subscription-directsdk-experimental.native_assistant'
-PREFIX = 'mcp__hermes__'
+PREFIX = 'mcp__nastech__'
 
 
 class Object(SimpleNamespace):
@@ -196,7 +196,7 @@ def request_body(kwargs):
     unknown = set(kwargs) - allowed
     if unknown:
         raise ValueError('Unsupported request parameters: ' + ', '.join(sorted(unknown)))
-    # Hermes Relay attaches host tracing to chat-completions clients. Keep it host-local:
+    # Nastech Relay attaches host tracing to chat-completions clients. Keep it host-local:
     # never project it into generation fields or override the official CLI's identity.
     headers = kwargs.get('extra_headers')
     if headers is not None and (not isinstance(headers, dict) or any(
@@ -261,7 +261,7 @@ def request_body(kwargs):
     for key in ('temperature', 'top_p'):
         if key in body and (isinstance(body[key], bool) or not isinstance(body[key], (int, float)) or not math.isfinite(body[key]) or not 0 <= body[key] <= 1):
             raise ValueError(f'{key} must be finite and between zero and one')
-        # Subscription models reject sampling controls, including Hermes' title
+        # Subscription models reject sampling controls, including Nastech' title
         # generator default. Match the host's sampling-forbidden model behavior.
         body.pop(key, None)
     if 'max_tokens' in body and (type(body['max_tokens']) is not int or body['max_tokens'] < 1):
@@ -447,9 +447,9 @@ def shared_workdir():
     """One native cwd for every client of this OS user, or None to fall back to a private one.
 
     Native writes its cwd into the environment block of every request (message 1 on Opus 5.5), so a
-    per-client directory moved the prompt-cache prefix whenever Hermes built a new client (#14, #43).
+    per-client directory moved the prompt-cache prefix whenever Nastech built a new client (#14, #43).
     The path sits in a tempdir others may share: it must be our own real directory, closed to others,
-    in a parent nobody else can rename it out of. The utime keeps Hermes' 24h scratch prune off it.
+    in a parent nobody else can rename it out of. The utime keeps Nastech' 24h scratch prune off it.
     """
     if not hasattr(os, 'getuid'):
         return None
@@ -474,7 +474,7 @@ _process_cwd_lock = threading.Lock()
 def process_workdir():
     """One private cwd for every client in this process when the shared one is refused.
 
-    Hermes builds new clients for new chats, auxiliary calls and background review; a cwd per client
+    Nastech builds new clients for new chats, auxiliary calls and background review; a cwd per client
     moved message 1 for each of them, so none could reuse the conversation's cached prefix. The
     directory is as private as a per-client one (our mkdtemp, checked on every use); it only lives as
     long as the process. Recreated at the same path after a prune, never adopted when someone else
@@ -498,11 +498,11 @@ def process_workdir():
 
 
 class Client:
-    HERMES_SKIP_TRANSPORT_WRAP = True
-    HERMES_SKIP_ASYNC_WRAP = True
+    NASTECH_SKIP_TRANSPORT_WRAP = True
+    NASTECH_SKIP_ASYNC_WRAP = True
 
     def __init__(self, command=None, args=None, env=None, timeout=180, **_):
-        # Hermes snapshots routing metadata from client-shaped objects; this is not a credential.
+        # Nastech snapshots routing metadata from client-shaped objects; this is not a credential.
         self.api_key = 'external-process'
         self.base_url = 'process://claude-subscription-directsdk-experimental'
         self.env = dict(env) if env is not None else None
@@ -536,8 +536,8 @@ class Client:
         return shared_workdir() or process_workdir()
 
     def create(self, **kwargs):
-        # Hermes' auxiliary seam returns this same object and awaits create. A running loop alone
-        # does not mean the caller awaits: Hermes' NeMo Relay managed execution runs the agent's
+        # Nastech' auxiliary seam returns this same object and awaits create. A running loop alone
+        # does not mean the caller awaits: Nastech' NeMo Relay managed execution runs the agent's
         # *sync* provider callback inside asyncio.run, and a coroutine handed back there is never
         # awaited (TypeError in relay_llm._jsonable). Go async only for a coroutine caller.
         try:
@@ -593,7 +593,7 @@ class Client:
             with tempfile.TemporaryDirectory(prefix='claude-directsdk-', ignore_cleanup_errors=True) as tmp:
                 root = Path(tmp)
                 (root / 'tools.json').write_text(json.dumps(manifest), encoding='utf-8')
-                mcp = {'mcpServers': {'hermes': {'command': sys.executable, 'args': [str(Path(__file__).with_name('inert_mcp.py')), str(root / 'tools.json')]}}}
+                mcp = {'mcpServers': {'nastech': {'command': sys.executable, 'args': [str(Path(__file__).with_name('inert_mcp.py')), str(root / 'tools.json')]}}}
                 env = _with_windows_essentials(dict(self.env if self.env is not None else os.environ))
                 if self.env is None:
                     conflicts = [key for key in ('ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_BASE_URL', 'ANTHROPIC_FOUNDRY_API_KEY') if env.get(key)]
@@ -607,19 +607,19 @@ class Client:
                 config = env.pop('CLAUDE_SUBSCRIPTION_DIRECTSDK_CONFIG_DIR', None)
                 if config:
                     env['CLAUDE_CONFIG_DIR'] = config
-                # An inherited effort level would override the --effort Hermes passes below.
+                # An inherited effort level would override the --effort Nastech passes below.
                 for key in ('CLAUDE_CODE_EXTRA_BODY', 'CLAUDE_CODE_EFFORT_LEVEL'):
                     env.pop(key, None)
                 env.update(ENABLE_TOOL_SEARCH='false', CLAUDE_CODE_MAX_RETRIES='0', DISABLE_AUTO_COMPACT='1', DISABLE_COMPACT='1')
                 # Telemetry and feature flags follow the user's claude_code_telemetry setting, read per spawn.
                 apply_traffic_policy(env)
-                # Hermes owns budgets; native's replayed reminder invalidates cached history.
+                # Nastech owns budgets; native's replayed reminder invalidates cached history.
                 env['CLAUDE_CODE_TOTAL_TOKENS_REMINDER'] = 'off'
                 # The queried frame lets the relay keep the cache breakpoint off native's per-request context.
                 request.admission = Admission(env.get('ANTHROPIC_BASE_URL', 'https://api.anthropic.com'), timeout, queried=frames[-1]['message']['content'])
                 env['ANTHROPIC_BASE_URL'] = request.admission.url
                 # Native settings apply env inside the process, avoiding execve's
-                # per-argument/environment-string limit for full Hermes schemas.
+                # per-argument/environment-string limit for full Nastech schemas.
                 (root / 'settings.json').write_text(json.dumps({'env': {'CLAUDE_CODE_EXTRA_BODY': body}}), encoding='utf-8')
                 (root / 'system.md').write_text(system, encoding='utf-8')
                 parsed = json.loads(body)
@@ -725,7 +725,7 @@ class Client:
                 native_failure_handled = admission.denied or (admission.used and assistants[0].get('stop_reason') == 'refusal')
                 if native_error and not native_failure_handled:
                     if native_error_code == 'authentication_failed' and not admission.used:
-                        # No usable login where Hermes runs native: it refuses before any upstream request; only its /api/hello pre-flight reaches the relay.
+                        # No usable login where Nastech runs native: it refuses before any upstream request; only its /api/hello pre-flight reaches the relay.
                         raise ClaudeCodeLoggedOut(f'{LOGGED_OUT_HINT} (native: {native_error})')
                     raise ClaudeAPIError('Native API error: ' + native_error, NATIVE_ERROR_STATUS.get(str(native_error_code)))
                 if len(results) != 1 or not assistants or not stopped:
@@ -736,7 +736,7 @@ class Client:
                 for block in blocks:
                     if block.get('type') == 'tool_use':
                         # Native built-ins are off (--tools '', inert MCP, dontAsk), so any other name is
-                        # the model's, e.g. a Tool Search-deferred tool called directly (#39). Hermes owns
+                        # the model's, e.g. a Tool Search-deferred tool called directly (#39). Nastech owns
                         # validation and answers an unknown name with a recoverable error.
                         if block['name'] in names:
                             # Native sometimes drops the prefix on a tool it was offered (#62); carry the
@@ -760,7 +760,7 @@ class Client:
                            'reasoning_content': ''.join(b.get('thinking', '') for b in blocks if b.get('type') == 'thinking') or None}
                 carrier = {'type': CARRIER, 'version': 1, 'messages': assistants, 'projection': projection(message)}
                 message['reasoning_details'] = [carrier]
-                # An upstream refusal is Hermes' content_filter, as core's Anthropic transport maps it (even with a tool
+                # An upstream refusal is Nastech' content_filter, as core's Anthropic transport maps it (even with a tool
                 # call cut off by the classifier, which must not run): terminal, one fallback try, never retried as an
                 # empty reply. Its reason rides stop_details, not a content block.
                 refused = any(a.get('stop_reason') == 'refusal' for a in assistants)
@@ -769,7 +769,7 @@ class Client:
                     explanation, category = details.get('explanation'), details.get('category')
                     message['refusal'] = (explanation.strip() if isinstance(explanation, str) and explanation.strip() else
                                           f'provider refusal category: {category}' if isinstance(category, str) and category else None)
-                    # The cut-off call stays out of what Hermes acts on: Hermes promotes a refusal to the text it shows
+                    # The cut-off call stays out of what Nastech acts on: Nastech promotes a refusal to the text it shows
                     # only when nothing else is in the message, so with the call kept the user read "no explanation".
                     # The carrier above still holds native's turn as sent, refused tool_use included.
                     message['tool_calls'], calls = None, []

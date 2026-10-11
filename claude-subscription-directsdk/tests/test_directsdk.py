@@ -44,7 +44,7 @@ assert sys.argv[sys.argv.index('--permission-mode')+1]=='dontAsk'
 assert sys.argv[sys.argv.index('--tools')+1]==''
 assert rows[-1]['type']=='user'
 assert 'metadata' not in wire
-blocks=[{'type':'thinking','thinking':'private','signature':'signed-test'}, {'type':'text','text':'hello\n'}, {'type':'tool_use','id':'toolu_test','name':os.environ.get('TOOL_NAME','mcp__hermes__probe'),'input':{'value':'x'}}]
+blocks=[{'type':'thinking','thinking':'private','signature':'signed-test'}, {'type':'text','text':'hello\n'}, {'type':'tool_use','id':'toolu_test','name':os.environ.get('TOOL_NAME','mcp__nastech__probe'),'input':{'value':'x'}}]
 if len(rows)>1:
  if rows[1]['message']['content'][0]['type']=='thinking':
   assert rows[1]['message']['content']==[dict(b, name=os.environ.get('REPLAY_NAME', b['name'])) if b['type']=='tool_use' else b for b in blocks]
@@ -172,14 +172,14 @@ class Contract(unittest.TestCase):
             client.close()
 
     def test_tool_outside_the_inventory_reaches_the_host(self):
-        """Hermes Tool Search defers MCP tools behind tool_search/tool_describe/tool_call, so they
+        """Nastech Tool Search defers MCP tools behind tool_search/tool_describe/tool_call, so they
         are not in this request's inventory. Claude sometimes calls one directly by the name it read
-        in tool_describe output (#39). Hermes owns tool validation: its unknown-tool path answers
+        in tool_describe output (#39). Nastech owns tool validation: its unknown-tool path answers
         with a recoverable error listing the callable tools, as it does for every other provider.
         Failing the whole request here left the model no way to correct itself."""
         with tempfile.TemporaryDirectory() as tmp:
             for native_name, host_name in (("mcp__fastmail__draft_email", "mcp__fastmail__draft_email"),
-                                           ("mcp__hermes__unlisted", "unlisted")):
+                                           ("mcp__nastech__unlisted", "unlisted")):
                 client = self.client(tmp, TOOL_NAME=native_name)
                 req = self.request()
                 result = client.chat.completions.create(**req)
@@ -198,7 +198,7 @@ class Contract(unittest.TestCase):
         # `terminal`). The host gets the tool, and the carried native block is rewritten so the next
         # request replays the name native was offered, not the slip it would keep imitating.
         with tempfile.TemporaryDirectory() as tmp:
-            client = self.client(tmp, TOOL_NAME="probe", REPLAY_NAME="mcp__hermes__probe")
+            client = self.client(tmp, TOOL_NAME="probe", REPLAY_NAME="mcp__nastech__probe")
             for streaming in (False, True):
                 req = self.request()
                 result = client.chat.completions.create(**req, stream=streaming)
@@ -210,7 +210,7 @@ class Contract(unittest.TestCase):
                     calls, details = result.choices[0].message.tool_calls, result.choices[0].message.reasoning_details
                 self.assertEqual([c.function.name for c in calls], ["probe"])
                 carried = [b["name"] for m in details[0]["messages"] for b in m["content"] if b["type"] == "tool_use"]
-                self.assertEqual(carried, ["mcp__hermes__probe"])
+                self.assertEqual(carried, ["mcp__nastech__probe"])
             msg = client.chat.completions.create(**req).choices[0].message.model_dump()
             msg["content"] = (msg.get("content") or "").strip()
             req["messages"] += [msg, {"role": "tool", "tool_call_id": "toolu_test", "content": "ok"}]
@@ -350,7 +350,7 @@ class Contract(unittest.TestCase):
 
             asyncio.run(run())
 
-            # A *sync* caller that happens to run on an event-loop thread (Hermes' NeMo Relay
+            # A *sync* caller that happens to run on an event-loop thread (Nastech' NeMo Relay
             # managed execution drives the agent's sync provider callback inside asyncio.run)
             # must get a completed response, not an un-awaited coroutine.
             async def sync_caller_in_loop():
@@ -393,7 +393,7 @@ class Contract(unittest.TestCase):
     def test_tool_schemas_are_normalized_for_the_native_validator(self):
         """Anthropic hard-400s on top-level oneOf/allOf/anyOf and on the null branch of nullable
         unions. The host normalizes both, but only on the api_mode='messages' path, so a single
-        Hermes tool carrying a conditional-required hint would fail every request on this
+        Nastech tool carrying a conditional-required hint would fail every request on this
         transport. Nested unions that are not nullable stay as the tool declared them."""
         import directsdk
 

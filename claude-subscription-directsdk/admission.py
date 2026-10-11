@@ -20,7 +20,7 @@ import urllib.request
 UNCACHEABLE = ('thinking', 'redacted_thinking')
 # Longest byte silence after the headers before the stream counts as dead. Anthropic documents no ping
 # cadence ("any number of ping events"); this is native's own byte-level watchdog against api.anthropic.com
-# (180 s, native 2.1.263-2.1.286). Behind this relay native widens its watchdog to 300 s, the same as Hermes'
+# (180 s, native 2.1.263-2.1.286). Behind this relay native widens its watchdog to 300 s, the same as Nastech'
 # compression floor and stall detector, so a silent upstream surfaced as a stall instead of this error.
 UPSTREAM_IDLE_SECONDS = 180
 # Probe a quiet upstream socket so a dead path fails in ~30 s instead of waiting on TCP retransmits.
@@ -45,7 +45,7 @@ def keepalive(sock):
 
 
 class QueriedTurnMismatch(ValueError):
-    """The native request could not be reconciled with Hermes' tool results."""
+    """The native request could not be reconciled with Nastech' tool results."""
 
 
 # Winsock: shutdown() does not wake a recv blocked in another thread; closesocket() cancels pending calls.
@@ -59,10 +59,10 @@ def _plain(block):
 
 
 def _frame_first(messages, queried):
-    """Put Hermes' first user turn ahead of the context native prepends to it (#77).
+    """Put Nastech' first user turn ahead of the context native prepends to it (#77).
 
     On the opening request native puts its per-request context block (the account-email
-    reminder) *before* the frame Hermes queried; on every later request that turn is replayed
+    reminder) *before* the frame Nastech queried; on every later request that turn is replayed
     without it. Nothing of the first turn therefore recurs, and call #2 re-writes the whole of
     it, which is most of a cron run whose first turn carries a source pack. On later turns
     native already appends its context after the host content. Moving the prepended text
@@ -99,7 +99,7 @@ def pin_message_breakpoint(payload, queried):
     tool round re-writes the whole history (issue #14, second cause).
 
     What does recur is known without reading native's text: everything through the last
-    assistant message, plus the leading blocks of the newest turn that equal the frame Hermes
+    assistant message, plus the leading blocks of the newest turn that equal the frame Nastech
     queried. The first block native added or changed ends that span. When that block is a
     tool_result (parallel calls, native's reminder on the last result), a breakpoint on the
     unchanged results before it measured no cache hit even though they replay byte-identical
@@ -164,7 +164,7 @@ def restore_queried_turn(payload, queried):
         return payload
 
     def unmatched():
-        raise QueriedTurnMismatch('Native request does not uniquely match Hermes tool results')
+        raise QueriedTurnMismatch('Native request does not uniquely match Nastech tool results')
 
     def bare_text(block):
         return (isinstance(block, dict) and set(block) == {'type', 'text'}
@@ -445,7 +445,7 @@ class Handler(BaseHTTPRequestHandler):
         with gate.lock:
             if gate.cancelled or gate.used:
                 gate.denied += 1
-                body = b'{"type":"error","error":{"type":"invalid_request_error","message":"HERMES_MODEL_ADMISSION_CONSUMED"}}'
+                body = b'{"type":"error","error":{"type":"invalid_request_error","message":"NASTECH_MODEL_ADMISSION_CONSUMED"}}'
                 self.send_response(400)
                 self.send_header('Content-Type', 'application/json')
                 self.send_header('Content-Length', str(len(body)))

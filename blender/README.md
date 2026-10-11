@@ -1,23 +1,23 @@
-<p align="center"><img src="../assets/blender.jpg" alt="Blender: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/blender.jpg" alt="Blender: official Nastech Agent plugin" width="100%"></p>
 
-# Blender integration for Hermes
+# Blender integration for Nastech
 
-> Part of [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-plugin-blender`](https://github.com/NousResearch/hermes-plugin-blender), which is archived; this directory carries its full history.
+> Part of [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-plugin-blender`](https://github.com/NastechResearch/nastech-plugin-blender), which is archived; this directory carries its full history.
 
-A portable Hermes plugin containing MCP launch configuration and a workflow skill for the [official Blender Lab MCP server](https://www.blender.org/lab/mcp-server/).
+A portable Nastech plugin containing MCP launch configuration and a workflow skill for the [official Blender Lab MCP server](https://www.blender.org/lab/mcp-server/).
 
 ## Install
 
 ```sh
-hermes plugins install blender
-hermes plugins enable blender
+nastech plugins install blender
+nastech plugins enable blender
 ```
 
-Choose the destination profile with the global `hermes -p <profile>` option. Catalog installation by the short name `blender` becomes available only after its catalog entry is merged and published.
+Choose the destination profile with the global `nastech -p <profile>` option. Catalog installation by the short name `blender` becomes available only after its catalog entry is merged and published.
 
 ## Prerequisites
 
-- Blender 5.1 or newer on the same machine as the Hermes backend. Hermes checks for it before installing and refuses the install when it is missing: on Windows the `Blender` uninstall entry's install folder or `%ProgramFiles%/Blender Foundation/Blender */blender.exe`; on macOS `Blender.app` in `/Applications`, `~/Applications` or the Steam library; on Linux `blender` on `PATH`, the `org.blender.Blender` flatpak, the `blender` snap or the Steam library (native or flatpak Steam). Linux has no version source, so the 5.1 minimum is checked on Windows and macOS only. This needs a Hermes release that reads location lists in `app:` declarations.
+- Blender 5.1 or newer on the same machine as the Nastech backend. Nastech checks for it before installing and refuses the install when it is missing: on Windows the `Blender` uninstall entry's install folder or `%ProgramFiles%/Blender Foundation/Blender */blender.exe`; on macOS `Blender.app` in `/Applications`, `~/Applications` or the Steam library; on Linux `blender` on `PATH`, the `org.blender.Blender` flatpak, the `blender` snap or the Steam library (native or flatpak Steam). Linux has no version source, so the 5.1 minimum is checked on Windows and macOS only. This needs a Nastech release that reads location lists in `app:` declarations.
 - The official Blender Lab MCP add-on installed and enabled in Blender, with Online access enabled and its bridge started on loopback port 9876.
 - Git and uv available to the backend. Network access is required for the initial MCP environment setup.
 - Optional, for the `*_for_cli` tools that open a saved `.blend` file in a separate background Blender: a `blender` command on the backend's `PATH`. `BLENDER_PATH` set in a shell or `.env` does not reach the server.
@@ -26,17 +26,17 @@ See [setup and troubleshooting](skills/blender/references/setup.md). Installing 
 
 ## Prepare the server before first activation
 
-The first upstream download/build took several minutes in our Windows checks. Warm its isolated uv environment before asking Hermes to connect, so a normal MCP connection timeout does not interrupt the download:
+The first upstream download/build took several minutes in our Windows checks. Warm its isolated uv environment before asking Nastech to connect, so a normal MCP connection timeout does not interrupt the download:
 
 ```sh
 uv tool run --from "git+https://projects.blender.org/lab/blender_mcp.git@2cea8d566dde07fbac28a61d698909d69724e853#subdirectory=mcp" blender-mcp --help
 ```
 
-Restart Hermes, or use the explicit plugin/MCP reload commands supported by your release. The package's skill is available through `skills_list` and its qualified name via `skill_view`. Verify a real `get_objects_summary` response before treating Blender as ready.
+Restart Nastech, or use the explicit plugin/MCP reload commands supported by your release. The package's skill is available through `skills_list` and its qualified name via `skill_view`. Verify a real `get_objects_summary` response before treating Blender as ready.
 
 ## What runs
 
-Hermes launches the official server over stdio with the same pinned source as the preparation command. The MCP server connects to the Blender add-on over `127.0.0.1:9876`. No native Hermes Python hooks, tool overrides, desktop JavaScript or self-updater are included.
+Nastech launches the official server over stdio with the same pinned source as the preparation command. The MCP server connects to the Blender add-on over `127.0.0.1:9876`. No native Nastech Python hooks, tool overrides, desktop JavaScript or self-updater are included.
 
 The upstream revision is fixed to `2cea8d566dde07fbac28a61d698909d69724e853` (v1.0.3). uv resolves its Python dependencies in an isolated tool environment; those transitive dependencies are not fully locked by this package.
 

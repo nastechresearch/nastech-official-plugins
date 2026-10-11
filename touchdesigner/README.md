@@ -1,10 +1,10 @@
-<p align="center"><img src="../assets/touchdesigner.jpg" alt="TouchDesigner: official Hermes Agent plugin" width="100%"></p>
+<p align="center"><img src="../assets/touchdesigner.jpg" alt="TouchDesigner: official Nastech Agent plugin" width="100%"></p>
 
-# hermes-plugin-touchdesigner
+# nastech-plugin-touchdesigner
 
-> Part of [Hermes Official Plugins](../README.md), Nous Research's official plugins for Hermes Agent. Formerly [`NousResearch/hermes-plugin-touchdesigner`](https://github.com/NousResearch/hermes-plugin-touchdesigner), which is archived; this directory carries its full history.
+> Part of [Nastech Official Plugins](../README.md), Nastech Research's official plugins for Nastech Agent. Formerly [`NastechResearch/nastech-plugin-touchdesigner`](https://github.com/NastechResearch/nastech-plugin-touchdesigner), which is archived; this directory carries its full history.
 
-Drive a live [TouchDesigner](https://derivative.ca) session from Hermes Agent
+Drive a live [TouchDesigner](https://derivative.ca) session from Nastech Agent
 through 404.zero's free **twozero** plugin, which embeds an MCP server inside
 the running TouchDesigner process (Streamable HTTP on `127.0.0.1:40404`).
 
@@ -20,8 +20,8 @@ ships two things in one install:
 ## Install
 
 ```bash
-hermes plugins install touchdesigner     # catalog name
-hermes plugins enable td                 # manifest name (kept short: see below)
+nastech plugins install touchdesigner     # catalog name
+nastech plugins enable td                 # manifest name (kept short: see below)
 ```
 
 Then, once per machine, inside TouchDesigner (2025.32280+, Windows/macOS):
@@ -30,7 +30,7 @@ Then, once per machine, inside TouchDesigner (2025.32280+, Windows/macOS):
 2. Drag `twozero.tox` into the TD network editor and click **Install**.
 3. twozero icon → Settings → mcp → "auto start MCP" → **Yes**.
 
-Start TD first, then a new Hermes session. The skill is available as
+Start TD first, then a new Nastech session. The skill is available as
 `agent-plugin-td-<hash>:touchdesigner-mcp` via `skill_view` (`skills_list` shows the exact name); health check:
 
 ```bash
@@ -39,7 +39,7 @@ curl -s http://127.0.0.1:40404/mcp
 
 ## Why the manifest name is `td`
 
-Hermes registers portable MCP tools as
+Nastech registers portable MCP tools as
 `mcp__agent_plugin_<name>_<hash>__<server>__<tool>`. twozero's longest tool
 name (`td_screen_point_to_global`) plus a `touchdesigner` namespace lands at
 71 characters, past the 64-character function-name cap on OpenAI-compatible
@@ -60,9 +60,9 @@ and Bedrock wire formats. `td` keeps every tool name at or under 60.
 
 ## Migrating from the bundled skill
 
-Earlier Hermes versions shipped `touchdesigner-mcp` as an optional skill whose
+Earlier Nastech versions shipped `touchdesigner-mcp` as an optional skill whose
 `setup.sh` wrote a `twozero_td` entry into `mcp_servers`. Remove that entry (or
-a `touchdesigner` one written by `hermes mcp install`) so the server is not
+a `touchdesigner` one written by `nastech mcp install`) so the server is not
 loaded twice.
 
 ## Credits

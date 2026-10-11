@@ -2,7 +2,7 @@
 
 Native attaches per-request context to the turn it answers and puts the single message
 cache_control on or after it; the next request replays that turn without it, so the cached
-prefix never recurs (issue #14, second cause). The relay anchors on the frame Hermes queried,
+prefix never recurs (issue #14, second cause). The relay anchors on the frame Nastech queried,
 never on native's wording.
 """
 import json
@@ -17,7 +17,7 @@ from admission import Admission, QueriedTurnMismatch, pin_message_breakpoint, re
 MARKER = {'type': 'ephemeral'}
 ASSISTANT = {'role': 'assistant', 'content': [
     {'type': 'thinking', 'thinking': 'signed', 'signature': 'sig'},
-    {'type': 'tool_use', 'id': 't1', 'name': 'mcp__hermes__probe', 'input': {}}]}
+    {'type': 'tool_use', 'id': 't1', 'name': 'mcp__nastech__probe', 'input': {}}]}
 RESULT = {'type': 'tool_result', 'tool_use_id': 't1', 'content': 'real output'}
 QUESTION = {'type': 'text', 'text': 'the real question'}
 
@@ -44,7 +44,7 @@ def with_marker(block):
 
 
 # Shapes native has used plus wording no relay has seen: the breakpoint lands on the last
-# block that is exactly Hermes' own content.
+# block that is exactly Nastech' own content.
 @pytest.mark.parametrize('queried,messages,expected', [
     # 2.1.280 tool round: reminder appended inside the tool_result, then a separate date message
     ([RESULT], [ASSISTANT,
@@ -73,7 +73,7 @@ def with_marker(block):
                 {'role': 'user', 'content': [RESULT, with_marker({'type': 'text', 'text': 'Session context: v9 build'})]}],
      (1, 0)),
 ])
-def test_breakpoint_moves_to_the_last_block_hermes_itself_sent(queried, messages, expected):
+def test_breakpoint_moves_to_the_last_block_nastech_itself_sent(queried, messages, expected):
     raw = wire(messages)
     out = pin_message_breakpoint(raw, queried)
     assert marks(out) == [expected]
@@ -125,7 +125,7 @@ def test_original_reminder_in_tool_result_is_preserved():
     assert out['messages'][1]['content'] == [original]
 
 
-def test_parallel_results_and_native_trailing_block_restore_hermes_frame():
+def test_parallel_results_and_native_trailing_block_restore_nastech_frame():
     second = {'type': 'tool_result', 'tool_use_id': 't2', 'content': 'second output'}
     native = [{**RESULT, 'content': RESULT['content'] + '\n<system-reminder>userEmail</system-reminder>'},
               second, {'type': 'text', 'text': 'native session context'}]
@@ -151,7 +151,7 @@ def test_unmatched_plain_user_turn_keeps_native_payload():
     assert restore_queried_turn(raw, [QUESTION]) == raw
 
 
-def test_admission_forwards_hermes_tool_result_without_native_email():
+def test_admission_forwards_nastech_tool_result_without_native_email():
     received = []
 
     class Peer(BaseHTTPRequestHandler):
@@ -209,7 +209,7 @@ def test_admission_forwards_an_unmatched_tool_result_unchanged():
         conn.request('POST', route, payload, {'Content-Type': 'application/json'})
         conn.getresponse().read()
         conn.close()
-        assert gate.unrestored == 'Native request does not uniquely match Hermes tool results'
+        assert gate.unrestored == 'Native request does not uniquely match Nastech tool results'
         assert gate.failure is None
         assert received == [payload]
     finally:

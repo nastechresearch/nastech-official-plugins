@@ -22,11 +22,11 @@ metadata:
 ## Architecture
 
 ```
-Hermes Agent -> MCP (Streamable HTTP) -> twozero.tox (port 40404) -> TD Python
+Nastech Agent -> MCP (Streamable HTTP) -> twozero.tox (port 40404) -> TD Python
 ```
 
 **TouchDesigner runs on Windows and macOS only — there is no Linux build**, so
-the standard localhost workflow cannot work on Linux. (A Hermes host can still
+the standard localhost workflow cannot work on Linux. (A Nastech host can still
 drive TD on ANOTHER machine by pointing the `mcp_servers.touchdesigner` url at
 that machine's IP, but TD itself must live on Windows/macOS and twozero binds
 localhost by default — the TD machine has to forward the port.)
@@ -39,12 +39,12 @@ Hub health check: `GET http://localhost:40404/mcp` returns JSON with instance PI
 
 ## Setup
 
-This skill ships inside the `touchdesigner` Hermes plugin together with the MCP
-server entry. Install and enable the plugin from the Nous plugin catalog:
+This skill ships inside the `touchdesigner` Nastech plugin together with the MCP
+server entry. Install and enable the plugin from the Nastech plugin catalog:
 
 ```bash
-hermes plugins install touchdesigner   # catalog name
-hermes plugins enable td               # plugin (manifest) name
+nastech plugins install touchdesigner   # catalog name
+nastech plugins enable td               # plugin (manifest) name
 ```
 
 Enabling the plugin registers the twozero MCP server (`http://127.0.0.1:40404/mcp`)
@@ -64,14 +64,14 @@ The optional helper script checks TD, downloads twozero.tox, and health-checks
 the port:
 
 ```bash
-bash "${HERMES_SKILL_DIR}/scripts/setup.sh"
+bash "${NASTECH_SKILL_DIR}/scripts/setup.sh"
 ```
 
 ### Manual steps (one-time, cannot be automated)
 
 1. **Drag `~/Downloads/twozero.tox` into the TD network editor** → click Install
 2. **Enable MCP:** click twozero icon → Settings → mcp → "auto start MCP" → Yes
-3. **Restart Hermes session** to pick up the new MCP server
+3. **Restart Nastech session** to pick up the new MCP server
 
 After setup, verify:
 ```bash
@@ -79,8 +79,8 @@ nc -z 127.0.0.1 40404 && echo "twozero MCP: READY"
 ```
 
 > Migrating from the old manual setup: earlier versions of this skill wrote a
-> `twozero_td` entry into `mcp_servers` (or `hermes mcp install touchdesigner`
-> wrote a `touchdesigner` entry). Remove those from `~/.hermes/config.yaml` so
+> `twozero_td` entry into `mcp_servers` (or `nastech mcp install touchdesigner`
+> wrote a `touchdesigner` entry). Remove those from `~/.nastech/config.yaml` so
 > the server isn't loaded twice under two names.
 
 ## Environment Notes

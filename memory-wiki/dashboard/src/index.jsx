@@ -1,8 +1,8 @@
 /**
- * Memory Wiki — Hermes Agent dashboard plugin (source).
+ * Memory Wiki — Nastech Agent dashboard plugin (source).
  *
  * Compiled to dashboard/dist/index.js by `npm run build` (esbuild, IIFE, React external via
- * window.__HERMES_PLUGIN_SDK__). Ported from web/src/pages/MemoryWikiPage.tsx in hermes-agent
+ * window.__NASTECH_PLUGIN_SDK__). Ported from web/src/pages/MemoryWikiPage.tsx in nastech-agent
  * PR #31244 by Abdullah Raja (@Araja119), salvaged in #89940.
  *
  * A dashboard plugin owns exactly one route (manifest tab.path = /memory-wiki), so the subject
@@ -12,7 +12,7 @@
  *   /memory-wiki#/days/<YYYY-MM-DD>   one daily log
  */
 
-const SDK = window.__HERMES_PLUGIN_SDK__;
+const SDK = window.__NASTECH_PLUGIN_SDK__;
 const { React } = SDK;
 const { useState, useEffect, useCallback } = SDK.hooks;
 const { Card, CardHeader, CardTitle, CardContent, Badge, Button, Input } = SDK.components;
@@ -319,7 +319,7 @@ function OverviewView({ go }) {
         <div className="text-sm text-muted-foreground">Local session history</div>
         <h1 className="text-3xl font-semibold tracking-tight">Memory Wiki</h1>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Browse deterministic subjects and daily logs generated from this Hermes profile's local
+          Browse deterministic subjects and daily logs generated from this Nastech profile's local
           session database.
         </p>
       </div>
@@ -515,4 +515,4 @@ function MemoryWikiPage() {
   return <OverviewView go={go} />;
 }
 
-window.__HERMES_PLUGINS__.register(PLUGIN_NAME, MemoryWikiPage);
+window.__NASTECH_PLUGINS__.register(PLUGIN_NAME, MemoryWikiPage);
